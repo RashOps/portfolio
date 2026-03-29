@@ -1,26 +1,84 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme {
+  --color-surface-dim: #0e0e0e;
+  --color-error-container: #b92902;
+  --color-on-secondary: #005a10;
+  --color-surface-container-highest: #262626;
+  --color-on-tertiary-fixed: #320032;
+  --color-primary: #f3ffca;
+  --color-inverse-primary: #516700;
+  --color-surface-container-high: #1f1f1f;
+  --color-on-surface: #ffffff;
+  --color-surface-container-low: #131313;
+  --color-tertiary: #ff51fa;
+  --color-on-error: #450900;
+  --color-on-primary: #516700;
+  --color-outline: #757575;
+  --color-secondary-container: #006e16;
+  --color-on-primary-fixed: #3a4a00;
+  --color-on-primary-container: #4a5e00;
+  --color-error: #ff7351;
+  --color-on-tertiary-fixed-variant: #6a006a;
+  --color-surface-bright: #2c2c2c;
+  --color-primary-fixed-dim: #beee00;
+  --color-primary-fixed: #cafd00;
+  --color-on-secondary-fixed-variant: #006513;
+  --color-on-primary-fixed-variant: #526900;
+  --color-on-surface-variant: #ababab;
+  --color-on-secondary-fixed: #00440a;
+  --color-surface: #0e0e0e;
+  --color-background: #0e0e0e;
+  --color-error-dim: #d53d18;
+  --color-tertiary-container: #fe00fe;
+  --color-on-error-container: #ffd2c8;
+  --color-secondary-fixed: #00fc40;
+  --color-surface-variant: #262626;
+  --color-on-secondary-container: #e6ffdc;
+  --color-outline-variant: #484848;
+  --color-on-background: #ffffff;
+  --color-secondary: #00fc40;
+  --color-surface-tint: #f3ffca;
+  --color-tertiary-dim: #ff51fa;
+  --color-on-tertiary: #400040;
+  --color-inverse-surface: #f9f9f9;
+  --color-tertiary-fixed-dim: #ff61f8;
+  --color-on-tertiary-container: #230023;
+  --color-surface-container: #191919;
+  --color-tertiary-fixed: #ff81f5;
+  --color-primary-container: #cafd00;
+  --color-secondary-dim: #00ec3b;
+  --color-primary-dim: #beee00;
+  --color-surface-container-lowest: #000000;
+  --color-secondary-fixed-dim: #00ec3b;
+  --color-inverse-on-surface: #555555;
+  
+  --font-headline: var(--font-space-grotesk), sans-serif;
+  --font-body: var(--font-inter), sans-serif;
+  --font-label: var(--font-space-grotesk), sans-serif;
+  
+  --radius-DEFAULT: 0px;
+  --radius-lg: 0px;
+  --radius-xl: 0px;
+  --radius-full: 9999px;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer components {
+  .scanline-bg {
+    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+    background-size: 100% 2px, 3px 100%;
+  }
+  .glow-text {
+    text-shadow: 0 0 8px rgba(202, 253, 0, 0.6);
+  }
+  .glitch-border {
+    border-image: linear-gradient(to right, #cafd00 10%, transparent 10%, transparent 90%, #ff51fa 90%) 1;
+  }
+  .ghost-border {
+    outline: 1px solid rgba(72, 72, 72, 0.15);
   }
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  @apply bg-surface font-body text-on-surface overflow-x-hidden;
 }
