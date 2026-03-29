@@ -1,36 +1,62 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# KINETIC_TERMINAL // PORTFOLIO
 
-## Getting Started
+Bienvenue sur **Kinetic Terminal**, le portfolio de **Rayhan** (OP_ID: 992-DELTA-X / SYSTEM_IDENT: RAYHAN_DEV). Ce projet est une expérience visuelle immersive s'inspirant des interfaces informatiques d'anciennes générations, du cyberpunk, et de l'esthétique "Terminal / Neo-Data".
 
-First, run the development server:
+Construit sur une architecture web moderne, ce portfolio sert à la fois de vitrine technologique et de CV interactif et s'articule comme le "hub d'un opérateur système".
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## 🚀 Noeuds de navigation (Pages)
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+L'application est divisée en plusieurs fragments accessibles via un menu persistant :
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+*   **[ Home ]** : Interface d'accueil avec dashboard de télémetrie et aperçu rapide du profil.
+*   **[ Operator Profile ]** : Dossier personnel avec les attributs techniques de l'opérateur (logique, créativité, optimisation) sous forme de statistiques RPG.
+*   **[ Mission Log ]** : Historique des déploiements et des projets majeurs formatés en grille stylisée (Bento grid).
+*   **[ Skill Tree ]** : Arborescence de compétences (Data Engineering, Machine Learning, Stat Analysis, etc.) avec barres d'aptitudes synchronisées.
+*   **[ Experience Timeline ]** : Frise chronologique duale retraçant les missions professionnelles passées (et la formation académique).
+*   **[ Side Quests ]** : Espace regroupant les expérimentations et objectifs annexes de l'opérateur.
+*   **[ Decrypt Demos ]** : Zone d'expérimentation visuelle (composants fracturés, terminaux système, déchiffrement simulé).
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🛠 Stack Technique
 
-## Learn More
+*   **Framework :** [Next.js (App Router)](https://nextjs.org/)
+*   **Styles & UI :** [Tailwind CSS v4](https://tailwindcss.com/)
+*   **Composants Optimisés :** Le module natif `<Image />` de Next.js (`next/image`) est massivement exploité pour un chargement et une compression ultra-rapides.
+*   **Typographies :** Polices d'écriture Google avec `next/font` (*Space Grotesk* pour les affichages terminaux et titres, *Inter* pour la lisibilité).
+*   **Iconographie :** *Google Material Symbols (Outlined)* configurés en mode "Filled".
 
-To learn more about Next.js, take a look at the following resources:
+## 💻 Guide d'installation rapide
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Pour amorcer la séquence de lancement locale sur votre propre système :
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+1.  **Récupérer l'archive (Clone)**
+    ```bash
+    git clone https://github.com/RashOps/portfolio.git
+    cd portfolio
+    ```
 
-## Deploy on Vercel
+2.  **Compiler les dépendances (Install)**
+    ```bash
+    npm install
+    # ou
+    bun install
+    ```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+3.  **Lancer le flux local (Dev Server)**
+    ```bash
+    npm run dev
+    # ou
+    bun run dev
+    ```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+4.  **Accéder à l'interface**
+    Ouvrez [http://localhost:3000](http://localhost:3000) dans votre explorateur réseau.
+
+## 🎨 Historique de Refonte
+
+Initialement composé à partir de multiples maquettes visuelles statiques, le projet a profité d'une harmonisation totale sur Next.js :
+- Création d'un layout global (`AppLayout`) pour fluidifier la navigation sous la forme neutre et réactive d'une SPA (Single Page Application).
+- Centralisation des tokens de couleurs (`primary`, `secondary`, `tertiary`) et des effets d'overlay (fond scanline, ombres portées) grâce dans un schéma commun par Tailwind CSS v4.
+- **Rapatriement des assets** : remplacement complet des dépendances cloud externes par du stockage et de l'optimisation locale côté serveur public.
+
+---
+*> // STATUS: ONLINE // ENCRYPTION: SECURE // UPLINK: STABLE*
