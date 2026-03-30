@@ -16,7 +16,7 @@ export default function OperatorProfile() {
                     fill
                     className="object-cover grayscale brightness-75 contrast-150 z-0" 
                     alt="stylized glitch portrait of a tech professional with digital chromatic aberration and scanline overlays in neon green and black" 
-                    src="/assets/images/operator_avatar.jpg"
+                    src="/assets/images/photo_portfolio.jpg"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent opacity-60"></div>
                   <div className="absolute bottom-4 left-4 bg-primary px-3 py-1">
@@ -40,7 +40,7 @@ export default function OperatorProfile() {
                 </div>
                 <div>
                   <div className="text-[0.6rem] font-label text-on-surface-variant tracking-widest uppercase">ROLE</div>
-                  <div className="font-body text-sm text-on-surface">SOFTWARE_ENGINEER // DEVELOPER</div>
+                  <div className="font-body text-sm text-on-surface">DATA_SCIENTIST // AI_ENGINEER</div>
                 </div>
                 <div>
                   <div className="text-[0.6rem] font-label text-on-surface-variant tracking-widest uppercase">LOC</div>
