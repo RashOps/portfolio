@@ -2,6 +2,9 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { BotProvider } from "./bot/BotProvider";
+import FloatingWidget from "./bot/FloatingWidget";
+import SlideUpConsole from "./bot/SlideUpConsole";
 
 export default function AppLayout({ children }) {
   const pathname = usePathname();
@@ -16,7 +19,7 @@ export default function AppLayout({ children }) {
   ];
 
   return (
-    <>
+    <BotProvider>
       {/* TopAppBar */}
       <header className="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-6 py-4 bg-[#0e0e0e] border-b border-[#cafd00]/10">
         <div className="flex items-center gap-4">
@@ -158,6 +161,9 @@ export default function AppLayout({ children }) {
           </div>
         </div>
       </div>
-    </>
+      
+      <FloatingWidget />
+      <SlideUpConsole />
+    </BotProvider>
   );
 }
