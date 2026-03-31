@@ -6,161 +6,155 @@ export default function OperatorProfile() {
     <>
       <div className="pt-8 pb-12 px-6 md:px-12 min-h-[calc(100vh-64px)] w-full">
         <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8">
-          {/* SECTION 1: PROFILE_GLITCH_AVATAR (Bento Column 1) */}
+          {/* SECTION 1: Photo & Identity */}
           <section className="lg:col-span-5 space-y-8">
             <div className="relative group">
-              <div className="absolute -inset-1 bg-[#cafd00]/20 blur-sm group-hover:bg-[#cafd00]/30 transition duration-1000"></div>
-              <div className="relative bg-surface-container-lowest border border-outline-variant p-2">
-                <div className="aspect-square bg-surface-container-high overflow-hidden relative">
+              <div className="absolute -inset-1 bg-gradient-to-br from-primary/20 to-tertiary/20 blur-lg rounded-2xl group-hover:from-primary/30 group-hover:to-tertiary/30 transition duration-1000"></div>
+              <div className="relative glass rounded-2xl p-2">
+                <div className="aspect-square rounded-xl overflow-hidden relative">
                   <Image 
                     fill
-                    className="object-cover grayscale brightness-75 contrast-150 z-0" 
-                    alt="stylized glitch portrait of a tech professional with digital chromatic aberration and scanline overlays in neon green and black" 
+                    className="object-cover brightness-90 z-0" 
+                    alt="Photo de profil de Rayhan, étudiant en Data Science et Intelligence Artificielle" 
                     src="/assets/images/photo_portfolio.jpg"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent opacity-60"></div>
-                  <div className="absolute bottom-4 left-4 bg-primary px-3 py-1">
-                    <span className="font-label text-on-primary text-[0.6rem] font-bold tracking-widest">UNIT_IDENTIFIED</span>
+                  <div className="absolute inset-0 bg-gradient-to-t from-surface via-transparent to-transparent opacity-40"></div>
+                  <div className="absolute bottom-4 left-4 glass rounded-lg px-3 py-1.5">
+                    <span className="font-label text-xs text-primary font-medium">Disponible</span>
                   </div>
                 </div>
               </div>
             </div>
             
-            {/* OPERATOR_IDENTIFICATION */}
-            <div className="bg-surface-container-low border-l-4 border-secondary p-6 space-y-4">
-              <h2 className="font-headline text-xs tracking-[0.3em] text-secondary-dim uppercase">OPERATOR_IDENTIFICATION</h2>
+            {/* Identity Card */}
+            <div className="glass rounded-2xl p-6 space-y-4">
+              <h2 className="font-headline text-xs tracking-widest text-secondary uppercase">Identité</h2>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <div className="text-[0.6rem] font-label text-on-surface-variant tracking-widest uppercase">NAME</div>
-                  <div className="font-headline text-lg text-primary text-shadow-[0_0_10px_rgba(202,253,0,0.5)]">RAYHAN_DEV</div>
+                  <div className="text-xs font-body text-on-surface-variant mb-1">Nom</div>
+                  <div className="font-headline text-lg text-primary">Rayhan</div>
                 </div>
                 <div>
-                  <div className="text-[0.6rem] font-label text-on-surface-variant tracking-widest uppercase">ID_CODE</div>
-                  <div className="font-headline text-lg text-primary">#992-DELTA-X</div>
+                  <div className="text-xs font-body text-on-surface-variant mb-1">Statut</div>
+                  <div className="font-headline text-lg text-primary">Étudiant</div>
                 </div>
                 <div>
-                  <div className="text-[0.6rem] font-label text-on-surface-variant tracking-widest uppercase">ROLE</div>
-                  <div className="font-body text-sm text-on-surface">DATA_SCIENTIST // AI_ENGINEER</div>
+                  <div className="text-xs font-body text-on-surface-variant mb-1">Spécialisation</div>
+                  <div className="font-body text-sm text-on-surface">Data Science & IA</div>
                 </div>
                 <div>
-                  <div className="text-[0.6rem] font-label text-on-surface-variant tracking-widest uppercase">LOC</div>
-                  <div className="font-body text-sm text-on-surface">FRANCE // DIGITAL_REALM</div>
+                  <div className="text-xs font-body text-on-surface-variant mb-1">Localisation</div>
+                  <div className="font-body text-sm text-on-surface">France</div>
                 </div>
               </div>
             </div>
           </section>
           
-          {/* SECTION 2: DATA_ANALYSIS (Bento Column 2) */}
+          {/* SECTION 2: Details */}
           <section className="lg:col-span-7 space-y-8">
-            {/* CORE_ATTRIBUTES (RPG STATS) */}
-            <div className="bg-surface-container border border-outline-variant/30 p-8 relative">
-              <div className="absolute top-0 right-0 p-2 text-[0.5rem] font-label text-primary/30">MODULE_STAT_04</div>
-              <h2 className="font-headline text-xl tracking-tight text-primary mb-8 border-b border-primary/10 pb-2 flex items-center gap-2">
-                <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>monitoring</span> CORE_ATTRIBUTES
+            {/* Core Competencies */}
+            <div className="glass rounded-2xl p-8 relative">
+              <h2 className="font-headline text-xl tracking-tight text-on-surface mb-8 pb-2 border-b border-white/10 flex items-center gap-2">
+                <span className="material-symbols-outlined text-primary" style={{ fontVariationSettings: "'FILL' 1" }}>analytics</span>
+                Compétences clés
               </h2>
               
               <div className="space-y-6">
-                {/* Stat: Logic */}
                 <div className="space-y-2">
                   <div className="flex justify-between items-end">
-                    <span className="font-label text-xs tracking-widest">LOGIC</span>
-                    <span className="font-headline text-secondary text-lg">98%</span>
+                    <span className="font-body text-sm">Analyse de données</span>
+                    <span className="font-headline text-primary text-sm">95%</span>
                   </div>
-                  <div className="h-1 w-full bg-surface-container-highest">
-                    <div className="h-full bg-secondary shadow-[0_0_8px_rgba(0,252,64,0.5)]" style={{ width: "98%" }}></div>
+                  <div className="h-1.5 w-full bg-white/5 rounded-full overflow-hidden">
+                    <div className="h-full bg-gradient-to-r from-primary to-primary-dim rounded-full" style={{ width: "95%" }}></div>
                   </div>
                 </div>
                 
-                {/* Stat: Creativity */}
                 <div className="space-y-2">
                   <div className="flex justify-between items-end">
-                    <span className="font-label text-xs tracking-widest">CREATIVITY</span>
-                    <span className="font-headline text-tertiary text-lg">85%</span>
+                    <span className="font-body text-sm">Machine Learning</span>
+                    <span className="font-headline text-secondary text-sm">88%</span>
                   </div>
-                  <div className="h-1 w-full bg-surface-container-highest">
-                    <div className="h-full bg-tertiary shadow-[0_0_8px_rgba(255,81,250,0.5)]" style={{ width: "85%" }}></div>
+                  <div className="h-1.5 w-full bg-white/5 rounded-full overflow-hidden">
+                    <div className="h-full bg-gradient-to-r from-secondary to-secondary-dim rounded-full" style={{ width: "88%" }}></div>
                   </div>
                 </div>
                 
-                {/* Stat: Optimization */}
                 <div className="space-y-2">
                   <div className="flex justify-between items-end">
-                    <span className="font-label text-xs tracking-widest">OPTIMIZATION</span>
-                    <span className="font-headline text-primary-fixed-dim text-lg">92%</span>
+                    <span className="font-body text-sm">Vision Business &amp; Stratégie</span>
+                    <span className="font-headline text-tertiary text-sm">85%</span>
                   </div>
-                  <div className="h-1 w-full bg-surface-container-highest">
-                    <div className="h-full bg-primary shadow-[0_0_8px_rgba(202,253,0,0.5)]" style={{ width: "92%" }}></div>
+                  <div className="h-1.5 w-full bg-white/5 rounded-full overflow-hidden">
+                    <div className="h-full bg-gradient-to-r from-tertiary to-tertiary-dim rounded-full" style={{ width: "85%" }}></div>
                   </div>
                 </div>
                 
-                {/* Stat: Resilience */}
                 <div className="space-y-2">
                   <div className="flex justify-between items-end">
-                    <span className="font-label text-xs tracking-widest">RESILIENCE</span>
-                    <span className="font-headline text-secondary text-lg">89%</span>
+                    <span className="font-body text-sm">Développement Web</span>
+                    <span className="font-headline text-primary text-sm">78%</span>
                   </div>
-                  <div className="h-1 w-full bg-surface-container-highest">
-                    <div className="h-full bg-secondary shadow-[0_0_8px_rgba(0,252,64,0.5)]" style={{ width: "89%" }}></div>
+                  <div className="h-1.5 w-full bg-white/5 rounded-full overflow-hidden">
+                    <div className="h-full bg-gradient-to-r from-primary to-tertiary rounded-full" style={{ width: "78%" }}></div>
                   </div>
                 </div>
               </div>
             </div>
             
-            {/* TECH_ORIGIN_STORY */}
+            {/* About & Values */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <div className="bg-surface-container-low border border-outline-variant/20 p-6 space-y-4">
+              <div className="glass rounded-2xl p-6 space-y-4">
                 <div className="flex items-center gap-2 text-primary">
-                  <span className="material-symbols-outlined text-sm" style={{ fontVariationSettings: "'FILL' 1" }}>history</span>
-                  <h3 className="font-headline text-xs tracking-widest uppercase">TECH_ORIGIN_STORY</h3>
+                  <span className="material-symbols-outlined text-lg" style={{ fontVariationSettings: "'FILL' 1" }}>school</span>
+                  <h3 className="font-headline text-sm font-bold">Formation</h3>
                 </div>
-                <p className="text-on-surface-variant text-xs leading-relaxed font-body">
-                    Forged in the silicon valleys of the old world, now navigating the neural architectures of the new. Mission: To bridge the gap between human intuition and machine precision. Specialist in high-entropy data environments.
+                <p className="text-on-surface-variant text-sm leading-relaxed font-body">
+                  Double cursus à la croisée de la technologie (Data &amp; IA à PSTB) et du management (Business à Excelia). Une approche hybride pour comprendre la tech et ses enjeux stratégiques.
                 </p>
               </div>
               
-              <div className="bg-surface-container-low border border-outline-variant/20 p-6 space-y-4">
+              <div className="glass rounded-2xl p-6 space-y-4">
                 <div className="flex items-center gap-2 text-secondary">
-                  <span className="material-symbols-outlined text-sm" style={{ fontVariationSettings: "'FILL' 1" }}>verified_user</span>
-                  <h3 className="font-headline text-xs tracking-widest uppercase">SYSTEM_DIAGNOSTICS</h3>
+                  <span className="material-symbols-outlined text-lg" style={{ fontVariationSettings: "'FILL' 1" }}>rocket_launch</span>
+                  <h3 className="font-headline text-sm font-bold">Ambition</h3>
                 </div>
                 <ul className="space-y-2">
-                  <li className="flex items-center gap-2 text-[0.65rem] text-on-surface">
-                    <span className="text-secondary">&gt;&gt;</span> ANALYTICAL_MINDSET_ACTIVE
+                  <li className="flex items-center gap-2 text-sm text-on-surface">
+                    <span className="text-secondary">→</span> Bâtir une posture d'expert en IA
                   </li>
-                  <li className="flex items-center gap-2 text-[0.65rem] text-on-surface">
-                    <span className="text-secondary">&gt;&gt;</span> NEURAL_NETWORK_SYNERGY_MAX
+                  <li className="flex items-center gap-2 text-sm text-on-surface">
+                    <span className="text-secondary">→</span> Appliquer la data au business
                   </li>
-                  <li className="flex items-center gap-2 text-[0.65rem] text-on-surface">
-                    <span className="text-secondary">&gt;&gt;</span> ZERO_TOLERANCE_FOR_INEFFICIENCY
+                  <li className="flex items-center gap-2 text-sm text-on-surface">
+                    <span className="text-secondary">→</span> Créer de l'impact par la technologie
                   </li>
                 </ul>
               </div>
             </div>
             
-            {/* CTA: ACCESS MISSION LOG */}
+            {/* CTA */}
             <div className="pt-4">
-              <Link className="block group w-full relative overflow-hidden bg-primary-container p-[1px]" href="/mission-log">
-                <div className="bg-primary-container px-8 py-4 flex items-center justify-between group-active:scale-95 transition-transform duration-100">
-                  <span className="font-headline text-[#0e0e0e] font-bold tracking-widest text-lg">ACCESS_MISSION_LOG</span>
+              <Link className="block group w-full relative overflow-hidden rounded-xl" href="/mission-log">
+                <div className="bg-gradient-to-r from-primary to-tertiary px-8 py-5 flex items-center justify-between rounded-xl group-active:scale-[0.98] transition-transform duration-100">
+                  <span className="font-headline text-white font-bold tracking-wide text-lg">Voir mes projets</span>
                   <div className="flex items-center gap-4">
-                    <div className="h-[2px] w-12 bg-[#0e0e0e] opacity-20 group-hover:w-24 transition-all"></div>
-                    <span className="material-symbols-outlined text-[#0e0e0e]" style={{ fontVariationSettings: "'FILL' 1" }}>arrow_forward</span>
+                    <div className="h-[2px] w-12 bg-white/30 group-hover:w-20 transition-all"></div>
+                    <span className="material-symbols-outlined text-white" style={{ fontVariationSettings: "'FILL' 1" }}>arrow_forward</span>
                   </div>
                 </div>
-                <div className="absolute top-0 left-0 w-full h-[2px] bg-white/30"></div>
-                <div className="absolute top-0 left-0 w-[2px] h-full bg-white/30"></div>
               </Link>
             </div>
           </section>
         </div>
 
-        {/* Decorative UI footer element */}
-        <div className="max-w-6xl mx-auto mt-12 border-t border-outline-variant/10 pt-4 flex justify-between items-center opacity-40">
-          <div className="font-label text-[0.5rem] tracking-[0.4em] uppercase hidden sm:block">SYSTEM_TIME: 23:59:59_UTC</div>
-          <div className="font-label text-[0.5rem] tracking-[0.4em] uppercase">ENCRYPTION: AES_256_ACTIVE</div>
+        {/* Decorative footer */}
+        <div className="max-w-6xl mx-auto mt-12 border-t border-white/5 pt-4 flex justify-between items-center text-on-surface-variant/40">
+          <div className="font-body text-xs hidden sm:block">Mis à jour en 2026</div>
+          <div className="font-body text-xs">Portfolio conçu avec Next.js &amp; Tailwind</div>
           <div className="flex items-center gap-2">
-            <div className="w-2 h-2 rounded-full bg-secondary animate-pulse"></div>
-            <div className="font-label text-[0.5rem] tracking-[0.4em] uppercase">LIVE_SIGNAL</div>
+            <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse"></div>
+            <div className="font-body text-xs">En ligne</div>
           </div>
         </div>
       </div>

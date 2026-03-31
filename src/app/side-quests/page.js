@@ -1,199 +1,183 @@
 export default function SideQuests() {
   return (
     <>
-      <div className="p-10 relative overflow-hidden bg-[#0e0e0e] min-h-[calc(100vh-64px)]">
-        <div className="absolute inset-0 scanline-bg opacity-30 pointer-events-none"></div>
+      <div className="p-10 relative overflow-hidden min-h-[calc(100vh-64px)]">
+        {/* Background glow */}
+        <div className="absolute top-0 right-0 w-96 h-96 bg-tertiary/5 blur-[150px] rounded-full pointer-events-none"></div>
         
         {/* Page Header */}
         <header className="relative z-10 mb-16">
           <div className="flex justify-between items-end gap-6 mb-8">
             <div>
-              <h1 className="text-[4.5rem] font-headline font-bold uppercase tracking-[-0.04em] text-primary leading-none text-glow-primary text-shadow-[0_0_12px_rgba(202,253,0,0.6)]">SIDE_QUESTS</h1>
-              <p className="text-[#ababab] font-body text-[0.875rem] max-w-2xl mt-4 tracking-tight border-l-2 border-[#cafd00]/30 pl-4 uppercase font-['Space_Grotesk'] leading-relaxed">
-                EXPLORATION_MODE: <span className="text-[#cafd00]">ENABLED</span>. 
-                ENGAGING SUPPLEMENTARY OBJECTIVES TO OPTIMIZE OPERATOR PERFORMANCE AND DATA THROUGHPUT.
+              <h1 className="text-5xl md:text-6xl font-headline font-bold tracking-tight leading-none mb-4">
+                Explorations
+              </h1>
+              <p className="text-on-surface-variant font-body text-sm max-w-2xl leading-relaxed">
+                Projets personnels, expérimentations et sujets de curiosité. C'est ici que je teste de nouvelles idées en dehors du cadre académique.
               </p>
             </div>
-            <div className="text-right hidden sm:block font-['Space_Grotesk'] uppercase tracking-[0.15em]">
-              <div className="text-[0.6875rem] text-secondary mb-1">TOTAL_XP: 14,250</div>
-              <div className="text-[0.6875rem] text-[#ababab]">LEVEL: 42_ARCHITECT</div>
+            <div className="text-right hidden sm:block">
+              <div className="text-sm text-primary font-headline font-medium mb-1">6 explorations</div>
+              <div className="text-xs text-on-surface-variant font-body">dont 3 en cours</div>
             </div>
           </div>
           
-          {/* Progress Section */}
-          <div className="bg-surface-container/40 p-1 border-t border-[#48484826]">
-            <div className="flex justify-between items-center px-4 py-3">
-              <span className="text-[10px] font-['Space_Grotesk'] uppercase tracking-[0.3em] text-[#cafd00]">OBJECTIVE_COMPLETION_INDEX</span>
-              <span className="text-[10px] font-['Space_Grotesk'] uppercase tracking-[0.2em] text-primary font-bold">68.4%</span>
+          {/* Progress */}
+          <div className="glass rounded-xl p-3">
+            <div className="flex justify-between items-center px-3 py-2">
+              <span className="text-xs font-body text-on-surface-variant">Progression globale</span>
+              <span className="text-xs font-headline text-primary font-bold">68%</span>
             </div>
-            <div className="h-1 w-full bg-[#131313] relative overflow-hidden">
-              <div className="h-full bg-[#cafd00] shadow-[0_0_15px_rgba(202,253,0,0.15)] transition-all duration-1000 ease-out" style={{ width: "68%" }}></div>
-              <div className="absolute top-0 right-[32%] h-full w-[10px] bg-white/20 blur-sm"></div>
+            <div className="h-1.5 w-full bg-white/5 rounded-full overflow-hidden">
+              <div className="h-full bg-gradient-to-r from-primary to-tertiary rounded-full transition-all duration-1000" style={{ width: "68%" }}></div>
             </div>
           </div>
         </header>
 
-        {/* Quest Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 relative z-10">
-          {/* Quest Card 1 */}
-          <div className="bg-surface-container/20 border border-[#48484826] group hover:border-[#cafd00]/30 transition-all duration-500 flex flex-col relative overflow-hidden">
-            <div className="absolute top-0 right-0 px-3 py-1 bg-secondary/10 border-b border-l border-secondary/20">
-              <span className="text-[8px] font-['Space_Grotesk'] tracking-[0.2em] text-secondary uppercase font-bold">STATUS: ONGOING</span>
+        {/* Cards Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 relative z-10">
+          {/* Card 1 */}
+          <div className="glass rounded-2xl group card-hover flex flex-col relative overflow-hidden">
+            <div className="absolute top-4 right-4">
+              <span className="text-xs font-body text-green-400 bg-green-400/10 px-2.5 py-1 rounded-full font-medium">En cours</span>
             </div>
             <div className="p-8">
               <div className="mb-6">
-                <span className="material-symbols-outlined text-primary text-[2.5rem] mb-4 opacity-70 group-hover:opacity-100 transition-opacity" style={{ fontVariationSettings: "'FILL' 1" }}>terminal</span>
-                <h3 className="text-[1.5rem] font-headline font-bold uppercase tracking-tight text-white group-hover:text-primary transition-colors">RETRO_COMPUTING</h3>
+                <span className="material-symbols-outlined text-primary text-4xl mb-4 opacity-70 group-hover:opacity-100 transition-opacity" style={{ fontVariationSettings: "'FILL' 1" }}>auto_awesome</span>
+                <h3 className="text-xl font-headline font-bold text-on-surface group-hover:text-primary transition-colors">Générateur de contenu IA</h3>
               </div>
-              <p className="text-[0.8125rem] text-[#ababab] font-body mb-8 leading-relaxed font-['Space_Grotesk'] uppercase tracking-wider">
-                Restoration of a Commodore 64 unit and developing basic 6502 Assembly routines to interface with modern AI subroutines.
+              <p className="text-sm text-on-surface-variant font-body mb-8 leading-relaxed">
+                Expérimentation avec les LLMs pour la génération automatique de résumés et de rapports à partir de données structurées.
               </p>
-              <div className="space-y-6">
+              <div className="space-y-4">
                 <div>
-                  <div className="text-[9px] font-['Space_Grotesk'] uppercase text-primary/60 mb-3 tracking-[0.2em]">REWARD_NODES:</div>
+                  <div className="text-xs font-body text-on-surface-variant mb-3">Technologies :</div>
                   <div className="flex flex-wrap gap-2">
-                    <span className="bg-[#131313] px-3 py-1.5 text-[9px] font-['Space_Grotesk'] text-primary border border-[#cafd00]/10 hover:border-primary/40 transition-colors cursor-default">LOW_LEVEL_LOGIC</span>
-                    <span className="bg-[#131313] px-3 py-1.5 text-[9px] font-['Space_Grotesk'] text-primary border border-[#cafd00]/10 hover:border-primary/40 transition-colors cursor-default">HARDWARE_ARCH</span>
+                    <span className="glass rounded-lg px-3 py-1.5 text-xs font-body text-primary">LangChain</span>
+                    <span className="glass rounded-lg px-3 py-1.5 text-xs font-body text-primary">OpenAI API</span>
                   </div>
                 </div>
-                <button className="w-full py-3 bg-transparent border border-[#cafd00]/20 hover:bg-[#cafd00]/10 text-[10px] font-['Space_Grotesk'] uppercase tracking-[0.3em] text-[#cafd00] font-bold transition-all active:-skew-x-2">
-                  RESUME_LOG_INTERFACE
+                <button className="w-full py-3 glass rounded-xl hover:bg-primary/10 text-sm font-body text-primary font-medium transition-all">
+                  En savoir plus
                 </button>
               </div>
             </div>
-            <div className="h-0.5 w-0 group-hover:w-full bg-[#cafd00] transition-all duration-700 absolute bottom-0"></div>
+            <div className="h-0.5 w-0 group-hover:w-full bg-gradient-to-r from-primary to-tertiary transition-all duration-700 absolute bottom-0 rounded-full"></div>
           </div>
 
-          {/* Quest Card 2 (Completed) */}
-          <div className="bg-surface-container/10 border border-secondary/20 group transition-all duration-500 flex flex-col relative opacity-80 hover:opacity-100">
-            <div className="absolute top-0 right-0 px-3 py-1 bg-secondary/20 border-b border-l border-secondary/40">
-              <span className="text-[8px] font-['Space_Grotesk'] tracking-[0.2em] text-secondary uppercase font-bold">STATUS: COMPLETED</span>
+          {/* Card 2 (Completed) */}
+          <div className="glass rounded-2xl group card-hover flex flex-col relative opacity-80 hover:opacity-100 transition-opacity">
+            <div className="absolute top-4 right-4">
+              <span className="text-xs font-body text-secondary bg-secondary/10 px-2.5 py-1 rounded-full font-medium">Terminé</span>
             </div>
             <div className="p-8">
               <div className="mb-6">
-                <span className="material-symbols-outlined text-secondary text-[2.5rem] mb-4" style={{ fontVariationSettings: "'FILL' 1" }}>check_circle</span>
-                <h3 className="text-[1.5rem] font-headline font-bold uppercase tracking-tight text-white group-hover:text-secondary transition-colors">AI_ETHICS_FRAMEWORK</h3>
+                <span className="material-symbols-outlined text-secondary text-4xl mb-4" style={{ fontVariationSettings: "'FILL' 1" }}>check_circle</span>
+                <h3 className="text-xl font-headline font-bold text-on-surface group-hover:text-secondary transition-colors">Éthique de l'IA</h3>
               </div>
-              <p className="text-[0.8125rem] text-[#ababab] font-body mb-8 leading-relaxed font-['Space_Grotesk'] uppercase tracking-wider">
-                Analyzing the moral implications of neural network agency and developing guardrails for autonomous data synthesis.
+              <p className="text-sm text-on-surface-variant font-body mb-8 leading-relaxed">
+                Recherche sur les biais algorithmiques et les implications éthiques des modèles de machine learning dans la prise de décision.
               </p>
-              <div className="space-y-6">
+              <div className="space-y-4">
                 <div>
-                  <div className="text-[9px] font-['Space_Grotesk'] uppercase text-secondary/60 mb-3 tracking-[0.2em]">REWARD_NODES:</div>
+                  <div className="text-xs font-body text-on-surface-variant mb-3">Domaines :</div>
                   <div className="flex flex-wrap gap-2">
-                    <span className="bg-[#131313] px-3 py-1.5 text-[9px] font-['Space_Grotesk'] text-secondary border border-secondary/20 cursor-default">ALGORITHMIC_BIAS_DETECTION</span>
+                    <span className="glass rounded-lg px-3 py-1.5 text-xs font-body text-secondary">Fairness ML</span>
+                    <span className="glass rounded-lg px-3 py-1.5 text-xs font-body text-secondary">Gouvernance data</span>
                   </div>
                 </div>
-                <button className="w-full py-3 bg-secondary/5 border border-secondary/10 text-[10px] font-['Space_Grotesk'] uppercase tracking-[0.3em] text-secondary/50 font-bold cursor-default">
-                  ARCHIVE_STABILIZED
+                <button className="w-full py-3 glass rounded-xl text-sm font-body text-on-surface-variant cursor-default">
+                  Exploration terminée
                 </button>
               </div>
             </div>
           </div>
 
-          {/* Quest Card 3 */}
-          <div className="bg-surface-container/20 border border-[#48484826] group hover:border-[#cafd00]/30 transition-all duration-500 flex flex-col relative overflow-hidden">
-            <div className="absolute top-0 right-0 px-3 py-1 bg-secondary/10 border-b border-l border-secondary/20">
-              <span className="text-[8px] font-['Space_Grotesk'] tracking-[0.2em] text-secondary uppercase font-bold">STATUS: ONGOING</span>
+          {/* Card 3 */}
+          <div className="glass rounded-2xl group card-hover flex flex-col relative overflow-hidden">
+            <div className="absolute top-4 right-4">
+              <span className="text-xs font-body text-green-400 bg-green-400/10 px-2.5 py-1 rounded-full font-medium">En cours</span>
             </div>
             <div className="p-8">
               <div className="mb-6">
-                <span className="material-symbols-outlined text-primary text-[2.5rem] mb-4 opacity-70 group-hover:opacity-100 transition-opacity" style={{ fontVariationSettings: "'FILL' 1" }}>audio_file</span>
-                <h3 className="text-[1.5rem] font-headline font-bold uppercase tracking-tight text-white group-hover:text-primary transition-colors">SYNTH_WAVE_SPLICING</h3>
+                <span className="material-symbols-outlined text-primary text-4xl mb-4 opacity-70 group-hover:opacity-100 transition-opacity" style={{ fontVariationSettings: "'FILL' 1" }}>monitoring</span>
+                <h3 className="text-xl font-headline font-bold text-on-surface group-hover:text-primary transition-colors">Data Viz avec D3.js</h3>
               </div>
-              <p className="text-[0.8125rem] text-[#ababab] font-body mb-8 leading-relaxed font-['Space_Grotesk'] uppercase tracking-wider">
-                Modular synthesis experimentation. Creating procedural audio tracks using granular oscillators for background ambiance.
+              <p className="text-sm text-on-surface-variant font-body mb-8 leading-relaxed">
+                Création de visualisations interactives et animées pour rendre les données complexes accessibles et compréhensibles.
               </p>
-              <div className="space-y-6">
+              <div className="space-y-4">
                 <div>
-                  <div className="text-[9px] font-['Space_Grotesk'] uppercase text-primary/60 mb-3 tracking-[0.2em]">REWARD_NODES:</div>
+                  <div className="text-xs font-body text-on-surface-variant mb-3">Technologies :</div>
                   <div className="flex flex-wrap gap-2">
-                    <span className="bg-[#131313] px-3 py-1.5 text-[9px] font-['Space_Grotesk'] text-primary border border-[#cafd00]/10 cursor-default">SIGNAL_PROCESSING</span>
+                    <span className="glass rounded-lg px-3 py-1.5 text-xs font-body text-primary">D3.js</span>
+                    <span className="glass rounded-lg px-3 py-1.5 text-xs font-body text-primary">Observable</span>
                   </div>
                 </div>
-                <button className="w-full py-3 bg-transparent border border-[#cafd00]/20 hover:bg-[#cafd00]/10 text-[10px] font-['Space_Grotesk'] uppercase tracking-[0.3em] text-[#cafd00] font-bold transition-all active:-skew-x-2">
-                  RESUME_LOG_INTERFACE
+                <button className="w-full py-3 glass rounded-xl hover:bg-primary/10 text-sm font-body text-primary font-medium transition-all">
+                  En savoir plus
                 </button>
               </div>
             </div>
-            <div className="h-0.5 w-0 group-hover:w-full bg-[#cafd00] transition-all duration-700 absolute bottom-0"></div>
+            <div className="h-0.5 w-0 group-hover:w-full bg-gradient-to-r from-primary to-tertiary transition-all duration-700 absolute bottom-0 rounded-full"></div>
           </div>
 
-          {/* Quest Card 4 (Locked) */}
-          <div className="bg-[#131313] border border-[#48484826] flex flex-col relative opacity-40 grayscale pointer-events-none">
-            <div className="absolute top-0 right-0 px-3 py-1 bg-[#131313] border-b border-l border-[#4848484d]">
-              <span className="text-[8px] font-['Space_Grotesk'] tracking-[0.2em] text-[#ababab] uppercase font-bold">STATUS: LOCKED</span>
+          {/* Card 4 (Locked) */}
+          <div className="glass rounded-2xl flex flex-col relative opacity-30 grayscale pointer-events-none">
+            <div className="absolute top-4 right-4">
+              <span className="text-xs font-body text-on-surface-variant bg-white/5 px-2.5 py-1 rounded-full">Bientôt</span>
             </div>
             <div className="p-8">
               <div className="mb-6">
-                <span className="material-symbols-outlined text-[#ababab] text-[2.5rem] mb-4" style={{ fontVariationSettings: "'FILL' 1" }}>lock</span>
-                <h3 className="text-[1.5rem] font-headline font-bold uppercase tracking-tight text-[#ababab]">HAPTIC_INTERFACE_MOD</h3>
+                <span className="material-symbols-outlined text-on-surface-variant text-4xl mb-4" style={{ fontVariationSettings: "'FILL' 1" }}>lock</span>
+                <h3 className="text-xl font-headline font-bold text-on-surface-variant">MLOps Pipeline</h3>
               </div>
-              <p className="text-[0.8125rem] text-[#757575] font-body mb-8 font-['Space_Grotesk'] uppercase tracking-wider">
-                Upgrade standard input devices with ultrasonic haptic feedback. Requires 'HARDWARE_ARCH' level 5.
+              <p className="text-sm text-on-surface-variant/60 font-body mb-8">
+                Mise en production de modèles ML avec monitoring, versioning et déploiement automatisé.
               </p>
-              <div className="mt-8">
-                <button className="w-full py-3 bg-transparent border border-[#48484826] text-[10px] font-['Space_Grotesk'] uppercase tracking-[0.3em] text-[#757575] font-bold">
-                  INSUFFICIENT_ACCESS
-                </button>
-              </div>
+              <button className="w-full py-3 glass rounded-xl text-sm font-body text-on-surface-variant/40">
+                Prochainement
+              </button>
             </div>
           </div>
 
-          {/* Quest Card 5 */}
-          <div className="bg-surface-container/20 border border-[#48484826] group hover:border-[#cafd00]/30 transition-all duration-500 flex flex-col relative overflow-hidden">
-            <div className="absolute top-0 right-0 px-3 py-1 bg-secondary/10 border-b border-l border-secondary/20">
-              <span className="text-[8px] font-['Space_Grotesk'] tracking-[0.2em] text-secondary uppercase font-bold">STATUS: ONGOING</span>
+          {/* Card 5 */}
+          <div className="glass rounded-2xl group card-hover flex flex-col relative overflow-hidden">
+            <div className="absolute top-4 right-4">
+              <span className="text-xs font-body text-green-400 bg-green-400/10 px-2.5 py-1 rounded-full font-medium">En cours</span>
             </div>
             <div className="p-8">
               <div className="mb-6">
-                <span className="material-symbols-outlined text-primary text-[2.5rem] mb-4 opacity-70 group-hover:opacity-100 transition-opacity" style={{ fontVariationSettings: "'FILL' 1" }}>satellite_alt</span>
-                <h3 className="text-[1.5rem] font-headline font-bold uppercase tracking-tight text-white group-hover:text-primary transition-colors">NEON_LOCATOR</h3>
+                <span className="material-symbols-outlined text-primary text-4xl mb-4 opacity-70 group-hover:opacity-100 transition-opacity" style={{ fontVariationSettings: "'FILL' 1" }}>article</span>
+                <h3 className="text-xl font-headline font-bold text-on-surface group-hover:text-primary transition-colors">Blog technique</h3>
               </div>
-              <p className="text-[0.8125rem] text-[#ababab] font-body mb-8 leading-relaxed font-['Space_Grotesk'] uppercase tracking-wider">
-                Mapping decommissioned industrial sites for signal dead-zones to establish local mesh network nodes.
+              <p className="text-sm text-on-surface-variant font-body mb-8 leading-relaxed">
+                Rédaction d'articles de vulgarisation sur le machine learning, la data science et les bonnes pratiques en ingénierie des données.
               </p>
-              <div className="space-y-6">
+              <div className="space-y-4">
                 <div>
-                  <div className="text-[9px] font-['Space_Grotesk'] uppercase text-primary/60 mb-3 tracking-[0.2em]">REWARD_NODES:</div>
+                  <div className="text-xs font-body text-on-surface-variant mb-3">Sujets :</div>
                   <div className="flex flex-wrap gap-2">
-                    <span className="bg-[#131313] px-3 py-1.5 text-[9px] font-['Space_Grotesk'] text-primary border border-[#cafd00]/10 cursor-default">NETWORK_TOPOLOGY</span>
+                    <span className="glass rounded-lg px-3 py-1.5 text-xs font-body text-primary">Vulgarisation ML</span>
                   </div>
                 </div>
-                <button className="w-full py-3 bg-transparent border border-[#cafd00]/20 hover:bg-[#cafd00]/10 text-[10px] font-['Space_Grotesk'] uppercase tracking-[0.3em] text-[#cafd00] font-bold transition-all active:-skew-x-2">
-                  RESUME_LOG_INTERFACE
+                <button className="w-full py-3 glass rounded-xl hover:bg-primary/10 text-sm font-body text-primary font-medium transition-all">
+                  En savoir plus
                 </button>
               </div>
             </div>
-            <div className="h-0.5 w-0 group-hover:w-full bg-[#cafd00] transition-all duration-700 absolute bottom-0"></div>
+            <div className="h-0.5 w-0 group-hover:w-full bg-gradient-to-r from-primary to-tertiary transition-all duration-700 absolute bottom-0 rounded-full"></div>
           </div>
 
-          {/* Add Empty Slot */}
-          <div className="border-2 border-[#48484826] border-dashed group hover:border-[#cafd00]/40 transition-all duration-500 flex flex-col items-center justify-center min-h-[400px] cursor-pointer bg-surface-container/5 relative overflow-hidden">
+          {/* Add New Card */}
+          <div className="border-2 border-dashed border-white/10 rounded-2xl group hover:border-primary/30 transition-all duration-500 flex flex-col items-center justify-center min-h-[400px] cursor-pointer relative overflow-hidden">
             <div className="relative">
-              <span className="material-symbols-outlined text-[#484848] text-[4rem] group-hover:text-primary transition-all duration-500 group-hover:rotate-90" style={{ fontVariationSettings: "'FILL' 1" }}>add_circle</span>
-              <div className="absolute inset-0 bg-primary/20 blur-xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
+              <span className="material-symbols-outlined text-on-surface-variant/30 text-6xl group-hover:text-primary transition-all duration-500 group-hover:rotate-90" style={{ fontVariationSettings: "'FILL' 1" }}>add_circle</span>
+              <div className="absolute inset-0 bg-primary/20 blur-xl opacity-0 group-hover:opacity-100 transition-opacity rounded-full"></div>
             </div>
-            <span className="mt-6 text-[10px] font-['Space_Grotesk'] uppercase tracking-[0.4em] text-[#484848] group-hover:text-primary transition-colors font-black relative z-10">INITIALIZE_NEW_QUEST</span>
+            <span className="mt-6 text-sm font-body text-on-surface-variant/30 group-hover:text-primary transition-colors font-medium">Nouvelle exploration</span>
           </div>
         </div>
-
-        {/* System Footer */}
-        <footer className="mt-20 pt-8 border-t border-[#48484826] flex flex-col md:flex-row justify-between items-center gap-6 relative z-10">
-          <div className="font-['Space_Grotesk'] text-[9px] text-[#757575] uppercase tracking-[0.3em]">
-            SYS_THREAD_ID: <span className="text-[#ababab]">0x94F2</span> // CACHE_STATUS: <span className="text-secondary">NOMINAL</span> // BUFFER: <span className="text-primary">08/10</span>
-          </div>
-          <div className="flex gap-8">
-            <div className="flex items-center gap-3">
-              <span className="w-1.5 h-1.5 bg-secondary animate-pulse rounded-full"></span>
-              <span className="font-['Space_Grotesk'] text-[9px] text-secondary uppercase tracking-[0.3em] font-bold">SENSORS_ONLINE</span>
-            </div>
-            <div className="flex items-center gap-3">
-              <span className="w-1.5 h-1.5 bg-error-dim rounded-full"></span>
-              <span className="font-['Space_Grotesk'] text-[9px] text-error-dim uppercase tracking-[0.3em] font-bold">SYNC_ERROR_04</span>
-            </div>
-          </div>
-        </footer>
       </div>
     </>
   );

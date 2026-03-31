@@ -13,13 +13,13 @@ const spaceGrotesk = Space_Grotesk({
 });
 
 export const metadata = {
-  title: "KINETIC_TERMINAL_V1.0 | OPERATOR_01",
-  description: "Analog Intelligence Portfolio",
+  title: "Rayhan — Data & AI Portfolio",
+  description: "Étudiant en Data Science & Intelligence Artificielle. Double cursus Tech (PSTB) et Business (Excelia). Portfolio de projets, compétences et parcours.",
 };
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" className={`${inter.variable} ${spaceGrotesk.variable} dark`}>
+    <html lang="fr" className={`${inter.variable} ${spaceGrotesk.variable} dark`}>
       <head>
         <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
       </head>

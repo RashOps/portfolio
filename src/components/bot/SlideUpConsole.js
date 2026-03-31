@@ -10,7 +10,6 @@ export default function SlideUpConsole() {
   const { messages, isLoading, append, sendMessage } = chat;
   const messagesEndRef = useRef(null);
   
-  // Gestion d'état locale pour l'input form au cas où ai-sdk l'omet
   const [localInput, setLocalInput] = useState("");
 
   const handleInputChange = (e) => setLocalInput(e.target.value);
@@ -18,7 +17,6 @@ export default function SlideUpConsole() {
     e.preventDefault();
     if (!localInput || !localInput.trim()) return;
     
-    // Fallback pour ai-sdk v5/v6: sendMessage prend { text: string }
     if (sendMessage) {
       sendMessage({ text: localInput });
     } else if (append) {
@@ -29,7 +27,6 @@ export default function SlideUpConsole() {
     setLocalInput("");
   };
 
-  // Auto-scroll vers le bas lors d'un nouveau message
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, isLoading]);
@@ -38,68 +35,78 @@ export default function SlideUpConsole() {
     <AnimatePresence>
       {isOpen && (
         <>
-          {/* Overlay flouté (cliquable pour fermer) */}
+          {/* Backdrop */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={closeConsole}
-            className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 lg:hidden" // Caché sur desktop si on veut, mais affiché par défaut pour l'overlay
+            className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50"
           />
 
-          {/* La Console en elle-même */}
+          {/* Console */}
           <motion.div
             initial={{ y: "100%", opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: "100%", opacity: 0 }}
             transition={{ type: "spring", damping: 25, stiffness: 200 }}
-            className="fixed bottom-0 left-0 right-0 z-50 lg:left-[256px] lg:bottom-6 lg:right-6 lg:w-auto lg:rounded-t-lg border-t lg:border border-[#cafd00]/30 bg-[#0e0e0e] shadow-[0_-10px_40px_rgba(202,253,0,0.1)] scanline-bg flex flex-col h-[60vh] lg:h-[500px] lg:max-w-2xl ml-auto"
+            className="fixed bottom-0 left-0 right-0 z-50 lg:left-[256px] lg:bottom-6 lg:right-6 lg:w-auto lg:rounded-2xl glass border-t lg:border border-white/10 shadow-2xl shadow-primary/5 flex flex-col h-[60vh] lg:h-[500px] lg:max-w-2xl ml-auto"
           >
-            {/* Header de la console */}
-            <div className="flex items-center justify-between p-3 border-b border-[#cafd00]/20 bg-[#151515]">
-              <div className="flex items-center gap-2 text-[#cafd00]">
-                <span className="material-symbols-outlined text-sm">terminal</span>
-                <span className="font-['Space_Grotesk'] text-xs uppercase tracking-widest font-bold">
-                  {BOT_NAME} // SYSTEM_LINK
-                </span>
-                {isLoading && (
-                   <span className="w-2 h-2 rounded-full bg-[#cafd00] animate-pulse ml-2"></span>
-                )}
+            {/* Header */}
+            <div className="flex items-center justify-between p-4 border-b border-white/10">
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary to-tertiary flex items-center justify-center">
+                  <span className="material-symbols-outlined text-white text-sm">smart_toy</span>
+                </div>
+                <div>
+                  <span className="font-headline text-sm font-bold text-on-surface">
+                    {BOT_NAME}
+                  </span>
+                  <div className="flex items-center gap-1.5">
+                    {isLoading ? (
+                      <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span>
+                    ) : (
+                      <span className="w-1.5 h-1.5 rounded-full bg-green-400"></span>
+                    )}
+                    <span className="text-[10px] text-on-surface-variant font-body">
+                      {isLoading ? "Réflexion..." : "En ligne"}
+                    </span>
+                  </div>
+                </div>
               </div>
               <button
                 onClick={closeConsole}
-                className="text-gray-400 hover:text-[#cafd00] transition-colors p-1"
+                className="text-on-surface-variant hover:text-on-surface transition-colors p-2 rounded-lg hover:bg-white/5"
               >
                 <span className="material-symbols-outlined text-lg">close</span>
               </button>
             </div>
 
-            {/* Zone des messages */}
-            <div className="flex-1 overflow-y-auto p-4 font-mono text-sm space-y-4">
+            {/* Messages */}
+            <div className="flex-1 overflow-y-auto p-4 space-y-4">
               {messages.length === 0 && (
-                <div className="text-gray-500 text-xs italic opacity-70">
-                  <p>&gt; {BOT_NAME} initialisé. Tapez '/' ou demandez-moi votre chemin.</p>
-                  <p>&gt; En attente d'une directive d'opérateur...</p>
+                <div className="text-on-surface-variant text-sm font-body space-y-2 p-4 glass rounded-xl">
+                  <p className="font-medium text-on-surface">👋 Bonjour !</p>
+                  <p>Je suis <span className="text-primary font-medium">{BOT_NAME}</span>, l'assistant IA de Rayhan. Posez-moi une question sur son profil, ses compétences ou ses projets.</p>
                 </div>
               )}
 
               {messages.map((m) => {
                 const isBot = m.role === "assistant" || m.role === "system";
                 
-                // Si c'est un appel d'outil (navigation cachée ou système) Vercel AI v5+
                 let toolElements = null;
                 if (m.parts) {
                   const toolParts = m.parts.filter(p => p.type === 'tool-invocation');
                   if (toolParts.length > 0) {
                     toolElements = toolParts.map((part) => (
-                      <div key={part.toolInvocation.toolCallId} className="text-[#cafd00]/70 text-xs italic mb-2">
-                        &gt; Exécution d'une routine système : {part.toolInvocation.toolName}...
+                      <div key={part.toolInvocation.toolCallId} className="text-primary/70 text-xs font-body mb-2 flex items-center gap-1">
+                        <span className="material-symbols-outlined text-xs">arrow_forward</span>
+                        Navigation en cours...
                       </div>
                     ));
                   }
                 }
 
-                // Récupération sécurisée du texte Vercel v5/v6
                 const rawText = m.content || (m.parts ? m.parts.filter(p => p.type === 'text').map(p => p.text).join('') : "");
 
                 return (
@@ -107,14 +114,14 @@ export default function SlideUpConsole() {
                     {toolElements}
                     {rawText && (
                       <div className={`flex flex-col ${isBot ? "items-start" : "items-end"}`}>
-                        <span className="text-[10px] text-gray-500 mb-1 font-['Space_Grotesk'] uppercase tracking-wider">
-                          {isBot ? BOT_NAME : "OPERATOR_LOCAL"}
+                        <span className="text-[10px] text-on-surface-variant mb-1 font-body">
+                          {isBot ? BOT_NAME : "Vous"}
                         </span>
                         <div
-                          className={`max-w-[85%] p-3 rounded-none whitespace-pre-wrap ${
+                          className={`max-w-[85%] p-3 rounded-xl whitespace-pre-wrap text-sm font-body ${
                             isBot
-                              ? "bg-[#1a1a1a] text-[#cafd00] border-l-2 border-[#cafd00]"
-                              : "bg-[#252525] text-gray-300 border-r-2 border-gray-500"
+                              ? "glass text-on-surface"
+                              : "bg-gradient-to-r from-primary to-tertiary text-white"
                           }`}
                         >
                           {rawText}
@@ -127,24 +134,23 @@ export default function SlideUpConsole() {
               <div ref={messagesEndRef} />
             </div>
 
-            {/* Zone de saisie (Prompt) */}
-            <form onSubmit={handleSubmit} className="p-4 border-t border-[#cafd00]/20 bg-[#101010]">
-              <div className="flex items-center font-mono">
-                <span className="text-[#cafd00] mr-2 text-sm font-bold">operator@kinetic:~$</span>
+            {/* Input */}
+            <form onSubmit={handleSubmit} className="p-4 border-t border-white/10">
+              <div className="flex items-center glass rounded-xl px-4 py-2">
                 <input
                   type="text"
                   value={localInput}
                   onChange={handleInputChange}
-                  placeholder="Posez votre question..."
-                  className="flex-1 bg-transparent border-none outline-none text-gray-200 placeholder-gray-600 focus:ring-0 text-sm"
+                  placeholder="Posez une question sur Rayhan..."
+                  className="flex-1 bg-transparent border-none outline-none text-on-surface placeholder-on-surface-variant/50 focus:ring-0 text-sm font-body"
                   autoComplete="off"
                 />
                 <button
                   type="submit"
                   disabled={isLoading || !localInput || !localInput.trim()}
-                  className="text-[#cafd00] disabled:opacity-30 disabled:cursor-not-allowed hover:bg-[#cafd00]/10 p-2 transition-all rounded"
+                  className="text-primary disabled:opacity-30 disabled:cursor-not-allowed hover:bg-white/5 p-2 transition-all rounded-lg"
                 >
-                  <span className="material-symbols-outlined text-sm">send</span>
+                  <span className="material-symbols-outlined text-lg">send</span>
                 </button>
               </div>
             </form>

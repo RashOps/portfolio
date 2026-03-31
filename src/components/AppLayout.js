@@ -2,43 +2,62 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { BotProvider } from "./bot/BotProvider";
+import { useState } from "react";
+import { BotProvider, useBot } from "./bot/BotProvider";
 import FloatingWidget from "./bot/FloatingWidget";
 import SlideUpConsole from "./bot/SlideUpConsole";
 
-export default function AppLayout({ children }) {
+function InnerLayout({ children }) {
   const pathname = usePathname();
+  const { toggleConsole } = useBot();
+  const [toast, setToast] = useState(null);
+
+  const showToast = (message) => {
+    setToast(message);
+    setTimeout(() => setToast(null), 3000);
+  };
 
   const navLinks = [
-    { name: "MISSION_LOG", path: "/mission-log", icon: "assignment" },
-    { name: "SKILL_TREE", path: "/skill-tree", icon: "account_tree" },
-    { name: "EXPERIENCE_TIMELINE", path: "/timeline", icon: "timeline" },
-    { name: "DECRYPT_DEMOS", path: "/decrypt-demos", icon: "enhanced_encryption" },
-    { name: "SIDE_QUESTS", path: "/side-quests", icon: "explore" },
-    { name: "DOSSIER", path: "/operator-profile", icon: "badge" },
+    { name: "Projets", path: "/mission-log", icon: "insights" },
+    { name: "Stack", path: "/skill-tree", icon: "auto_awesome" },
+    { name: "Parcours", path: "/timeline", icon: "work_history" },
+    { name: "Playground", path: "/decrypt-demos", icon: "science" },
+    { name: "Explorations", path: "/side-quests", icon: "explore" },
+    { name: "À propos", path: "/operator-profile", icon: "person" },
   ];
 
   return (
-    <BotProvider>
+    <>
+      {/* Toast Notification */}
+      {toast && (
+        <div className="fixed top-24 left-1/2 -translate-x-1/2 z-[100] animate-pulse">
+          <div className="glass rounded-xl px-6 py-3 shadow-lg shadow-primary/10">
+            <span className="font-label text-sm tracking-wide text-primary font-medium">
+              {toast}
+            </span>
+          </div>
+        </div>
+      )}
+
       {/* TopAppBar */}
-      <header className="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-6 py-4 bg-[#0e0e0e] border-b border-[#cafd00]/10">
+      <header className="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-6 py-4 bg-surface/80 backdrop-blur-xl border-b border-white/5">
         <div className="flex items-center gap-4">
           <Link href="/">
-            <h1 className="font-['Space_Grotesk'] uppercase tracking-tighter text-xl font-bold text-[#cafd00] drop-shadow-[0_0_8px_rgba(202,253,0,0.5)]">
-              KINETIC_TERMINAL_V1.0
+            <h1 className="font-headline text-xl font-bold gradient-text tracking-tight">
+              Rayhan.
             </h1>
           </Link>
         </div>
         
-        <nav className="hidden md:flex items-center gap-6 font-['Space_Grotesk'] uppercase tracking-tighter text-[11px]">
+        <nav className="hidden md:flex items-center gap-6 font-body text-sm">
           {navLinks.map((link) => (
             <Link
               key={link.name}
               href={link.path}
               className={`${
                 pathname === link.path
-                  ? "text-[#cafd00] border-b-2 border-[#cafd00] pb-1"
-                  : "text-[#ababab] hover:text-[#f3ffca] transition-colors"
+                  ? "text-primary font-medium"
+                  : "text-on-surface-variant hover:text-on-surface transition-colors"
               }`}
             >
               {link.name}
@@ -46,31 +65,31 @@ export default function AppLayout({ children }) {
           ))}
         </nav>
 
-        <div className="flex items-center gap-4">
-          <button className="text-[#cafd00] hover:bg-[#cafd00]/5 hover:text-[#cafd00] p-2 transition-transform duration-150 active:scale-95">
-            <span className="material-symbols-outlined">notifications_active</span>
+        <div className="flex items-center gap-2">
+          <button onClick={() => showToast("✨ Aucune notification pour le moment")} className="text-on-surface-variant hover:text-primary p-2 rounded-lg hover:bg-white/5 transition-all duration-150 active:scale-95">
+            <span className="material-symbols-outlined text-xl">notifications</span>
           </button>
-          <button className="text-[#cafd00] hover:bg-[#cafd00]/5 hover:text-[#cafd00] p-2 transition-transform duration-150 active:scale-95">
-            <span className="material-symbols-outlined">terminal</span>
+          <button onClick={toggleConsole} className="text-on-surface-variant hover:text-primary p-2 rounded-lg hover:bg-white/5 transition-all duration-150 active:scale-95">
+            <span className="material-symbols-outlined text-xl">smart_toy</span>
           </button>
         </div>
       </header>
 
       {/* SideNavBar */}
-      <aside className="fixed left-0 top-0 h-screen w-64 z-40 flex-col bg-[#131313] border-r border-[#cafd00]/10 pt-20 hidden md:flex">
-        <div className="px-6 mb-10">
+      <aside className="fixed left-0 top-0 h-screen w-64 z-40 flex-col bg-surface-container-low/50 backdrop-blur-xl border-r border-white/5 pt-20 hidden md:flex">
+        <div className="px-6 mb-8">
           <div className="flex items-center gap-3 mb-2">
-            <div className="w-10 h-10 bg-surface-container-high flex items-center justify-center border border-[#cafd00]/20">
-              <span className="material-symbols-outlined text-[#cafd00] text-xl">person</span>
+            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-tertiary flex items-center justify-center">
+              <span className="text-white font-headline font-bold text-sm">R</span>
             </div>
             <div>
-              <p className="font-['Space_Grotesk'] font-black text-[#cafd00] text-sm tracking-tighter">OPERATOR_01</p>
-              <p className="font-['Space_Grotesk'] text-[10px] text-secondary tracking-widest uppercase">SYSTEM_STABLE_V1</p>
+              <p className="font-headline font-bold text-on-surface text-sm">Rayhan</p>
+              <p className="font-body text-[11px] text-on-surface-variant">Data & AI Student</p>
             </div>
           </div>
         </div>
 
-        <nav className="flex-grow flex flex-col gap-1 font-['Space_Grotesk'] text-[10px] tracking-[0.2em] uppercase overflow-y-auto">
+        <nav className="flex-grow flex flex-col gap-1 font-body text-sm overflow-y-auto">
           {navLinks.map((link) => {
             const isActive = pathname === link.path;
             return (
@@ -79,89 +98,86 @@ export default function AppLayout({ children }) {
                 href={link.path}
                 className={
                   isActive
-                    ? "flex items-center gap-3 bg-[#cafd00]/10 text-[#cafd00] border-l-4 border-[#cafd00] px-4 py-3 hover:shadow-[0_0_10px_rgba(202,253,0,0.2)] transition-all duration-200"
-                    : "flex items-center gap-3 text-[#ababab] px-4 py-3 hover:bg-[#191919] hover:text-[#cafd00] transition-all duration-200"
+                    ? "flex items-center gap-3 bg-primary/10 text-primary rounded-lg mx-3 px-4 py-2.5 font-medium transition-all duration-200"
+                    : "flex items-center gap-3 text-on-surface-variant mx-3 px-4 py-2.5 rounded-lg hover:bg-white/5 hover:text-on-surface transition-all duration-200"
                 }
               >
-                <span className="material-symbols-outlined text-sm">{link.icon}</span>
+                <span className="material-symbols-outlined text-lg">{link.icon}</span>
                 {link.name}
               </Link>
             );
           })}
           
-          <div className="my-4 border-t border-[#cafd00]/5 mx-4"></div>
+          <div className="my-3 border-t border-white/5 mx-6"></div>
           
-          <Link href="#" className="flex items-center gap-3 text-[#ababab] px-4 py-3 hover:bg-[#191919] hover:text-[#cafd00] transition-all duration-200">
-            <span className="material-symbols-outlined text-sm">security</span>
-            Root access
-          </Link>
-          <Link href="#" className="flex items-center gap-3 text-[#ababab] px-4 py-3 hover:bg-[#191919] hover:text-[#cafd00] transition-all duration-200">
-            <span className="material-symbols-outlined text-sm">database</span>
-            Data Vault
-          </Link>
+          <a href="https://linkedin.com/" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 text-on-surface-variant mx-3 px-4 py-2.5 rounded-lg hover:bg-white/5 hover:text-on-surface transition-all duration-200">
+            <span className="material-symbols-outlined text-lg">hub</span>
+            LinkedIn
+          </a>
+          <a href="/assets/cv.pdf" download className="flex items-center gap-3 text-on-surface-variant mx-3 px-4 py-2.5 rounded-lg hover:bg-white/5 hover:text-on-surface transition-all duration-200">
+            <span className="material-symbols-outlined text-lg">download</span>
+            Télécharger CV
+          </a>
         </nav>
 
         <div className="px-6 mb-6">
-          <button className="w-full bg-[#cafd00] text-[#0e0e0e] font-['Space_Grotesk'] font-bold text-[10px] py-3 tracking-widest hover:shadow-[0_0_15px_rgba(202,253,0,0.4)] transition-all active:scale-95">
-            INITIALIZE_PHASE_2
+          <button onClick={toggleConsole} className="w-full bg-gradient-to-r from-primary to-tertiary text-white font-headline font-bold text-xs py-3 rounded-lg tracking-wide hover:shadow-lg hover:shadow-primary/20 transition-all active:scale-95">
+            ✦ Demander à l'assistant
           </button>
         </div>
 
-        <div className="mt-auto border-t border-[#cafd00]/10 py-4 flex flex-col gap-1 font-['Space_Grotesk'] text-[10px] tracking-[0.2em] uppercase">
-          <Link href="#" className="flex items-center gap-3 text-[#ababab] px-4 py-3 hover:bg-[#191919] hover:text-[#cafd00] transition-all duration-200">
-            <span className="material-symbols-outlined text-sm">settings</span>
-            Settings
-          </Link>
-          <Link href="#" className="flex items-center gap-3 text-[#ababab] px-4 py-3 hover:bg-[#191919] hover:text-[#cafd00] transition-all duration-200">
-            <span className="material-symbols-outlined text-sm">logout</span>
-            Logout
-          </Link>
+        <div className="mt-auto border-t border-white/5 py-3 flex flex-col gap-1 font-body text-sm">
+          <button onClick={() => showToast("🔒 Accès restreint — Droits administrateur requis")} className="flex items-center gap-3 text-on-surface-variant mx-3 px-4 py-2.5 rounded-lg hover:bg-white/5 hover:text-on-surface w-full text-left transition-all duration-200">
+            <span className="material-symbols-outlined text-lg">settings</span>
+            Paramètres
+          </button>
+          <button onClick={() => showToast("👋 Session active — Déconnexion impossible")} className="flex items-center gap-3 text-on-surface-variant mx-3 px-4 py-2.5 rounded-lg hover:bg-white/5 hover:text-on-surface w-full text-left transition-all duration-200">
+            <span className="material-symbols-outlined text-lg">logout</span>
+            Déconnexion
+          </button>
         </div>
       </aside>
 
       {/* Main Content Canvas */}
-      <main className="md:ml-64 pt-16 min-h-screen relative scanline-bg">
+      <main className="md:ml-64 pt-16 min-h-screen relative">
         {children}
         
-        {/* Global Footer / System Shutdown */}
-        <footer className="py-12 px-6 border-t border-[#191919] bg-surface mt-24">
+        {/* Global Footer */}
+        <footer className="py-12 px-6 border-t border-white/5 mt-24">
           <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
             <div className="flex items-center gap-6">
-              <span className="font-headline font-black text-xl text-primary opacity-50">KINETIC_TERMINAL_V1.0</span>
-              <div className="h-8 w-[1px] bg-outline-variant/20 hidden md:block"></div>
-              <p className="font-label text-[10px] text-on-surface-variant uppercase tracking-[0.2em]">
-                © 2026 TERMINAL_SESSION_01 // ALL_RIGHTS_ENCRYPTED
+              <span className="font-headline font-bold text-lg gradient-text">Rayhan.</span>
+              <div className="h-6 w-[1px] bg-white/10 hidden md:block"></div>
+              <p className="font-body text-xs text-on-surface-variant">
+                © 2026 — Conçu avec passion & intelligence artificielle
               </p>
             </div>
-            <div className="flex items-center gap-8">
-              <Link href="#" className="text-on-surface-variant hover:text-primary transition-colors">
+            <div className="flex items-center gap-6">
+              <a href="https://linkedin.com/" target="_blank" rel="noopener noreferrer" className="text-on-surface-variant hover:text-primary transition-colors">
                 <span className="material-symbols-outlined">public</span>
-              </Link>
-              <Link href="#" className="text-on-surface-variant hover:text-primary transition-colors">
-                <span className="material-symbols-outlined">code</span>
-              </Link>
-              <Link href="#" className="text-on-surface-variant hover:text-primary transition-colors">
+              </a>
+              <a href="https://github.com/RashOps" target="_blank" rel="noopener noreferrer" className="text-on-surface-variant hover:text-primary transition-colors">
+                <svg viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">
+                  <path d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.87 1.52 2.34 1.07 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.92 0-1.11.38-2.02 1.03-2.71-.1-.25-.45-1.29.1-2.64 0 0 .84-.27 2.75 1.02.79-.22 1.65-.33 2.5-.33.85 0 1.71.11 2.5.33 1.91-1.29 2.75-1.02 2.75-1.02.55 1.35.2 2.39.1 2.64.65.69 1.03 1.6 1.03 2.71 0 3.82-2.34 4.66-4.57 4.91.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 2Z" />
+                </svg>
+              </a>
+              <a href="mailto:touboui.sehfredrayhan@gmail.com" className="text-on-surface-variant hover:text-primary transition-colors">
                 <span className="material-symbols-outlined">mail</span>
-              </Link>
+              </a>
             </div>
           </div>
         </footer>
       </main>
+    </>
+  );
+}
 
-      {/* UI Elements Overlay */}
-      <div className="fixed top-24 right-6 z-50 pointer-events-none hidden lg:block">
-        <div className="flex flex-col items-end gap-2">
-          <div className="bg-primary/5 border border-primary/20 p-2 backdrop-blur-md">
-            <p className="font-label text-[8px] text-primary mb-1">LATENCY</p>
-            <p className="font-headline font-bold text-xs">12MS</p>
-          </div>
-          <div className="bg-secondary/5 border border-secondary/20 p-2 backdrop-blur-md">
-            <p className="font-label text-[8px] text-secondary mb-1">UPTIME</p>
-            <p className="font-headline font-bold text-xs">99.9%</p>
-          </div>
-        </div>
-      </div>
-      
+export default function AppLayout({ children }) {
+  return (
+    <BotProvider>
+      <InnerLayout>
+        {children}
+      </InnerLayout>
       <FloatingWidget />
       <SlideUpConsole />
     </BotProvider>
