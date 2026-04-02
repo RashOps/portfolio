@@ -4,6 +4,7 @@ import { useRef, useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useBot } from "./BotProvider";
 import { BOT_NAME } from "@/lib/bot-knowledge";
+import ReactMarkdown from 'react-markdown';
 
 export default function SlideUpConsole() {
   const { isOpen, closeConsole, chat } = useBot();
@@ -107,24 +108,40 @@ export default function SlideUpConsole() {
                   }
                 }
 
+// Contenu formatté (Markdown)
                 const rawText = m.content || (m.parts ? m.parts.filter(p => p.type === 'text').map(p => p.text).join('') : "");
+                // Nettoyage des marqueurs [GOTO:...] pour l'affichage UI
+                const displayText = rawText.replace(/\[GOTO:(.+?)\]/g, "");
+
+                if (!displayText && !toolElements) return null;
 
                 return (
                   <div key={m.id} className="w-full">
                     {toolElements}
-                    {rawText && (
+                    {displayText && (
                       <div className={`flex flex-col ${isBot ? "items-start" : "items-end"}`}>
                         <span className="text-[10px] text-on-surface-variant mb-1 font-body">
                           {isBot ? BOT_NAME : "Vous"}
                         </span>
                         <div
-                          className={`max-w-[85%] p-3 rounded-xl whitespace-pre-wrap text-sm font-body ${
+                          className={`max-w-[85%] p-4 rounded-2xl text-sm font-body ${
                             isBot
                               ? "glass text-on-surface"
-                              : "bg-gradient-to-r from-primary to-tertiary text-white"
+                              : "bg-gradient-to-r from-primary to-tertiary text-white shadow-lg"
                           }`}
                         >
-                          {rawText}
+                          {isBot ? (
+                            <ReactMarkdown 
+                              className="prose prose-invert max-w-none prose-sm 
+                                prose-p:leading-relaxed prose-p:mb-2 last:prose-p:mb-0
+                                prose-li:my-1 prose-ul:my-2 prose-strong:text-secondary 
+                                prose-headings:text-primary prose-headings:mb-2 prose-headings:mt-4 first:prose-headings:mt-0"
+                            >
+                              {displayText}
+                            </ReactMarkdown>
+                          ) : (
+                            <div className="whitespace-pre-wrap">{displayText}</div>
+                          )}
                         </div>
                       </div>
                     )}

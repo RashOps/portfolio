@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useState, useEffect } from "react";
+import { createContext, useContext, useState, useEffect, useRef } from "react";
 import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport } from "ai";
 import { useRouter } from "next/navigation";
@@ -11,27 +11,37 @@ export function BotProvider({ children }) {
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
 
-  // Initialisation du Vercel AI SDK (client-side) avec le nouveau système de transport v5+
   const chat = useChat({
-    transport: new DefaultChatTransport({ api: "/api/chat" }),
-    // Interception des appels de fonction de l'IA côté client
-    onToolCall: async ({ toolCall }) => {
-      if (toolCall.toolName === "navigateTo") {
-        const { path, reason } = toolCall.args;
-        console.log(`[N.E.X.U.S CMD] Redirection vers ${path}. Raison: ${reason}`);
-        
-        // Simuler un léger temps de traitement "Système" pour l'immersion
-        setTimeout(() => {
-          router.push(path);
-          // Optionnel: fermer la console après navigation, ou la laisser ouverte
-          // setIsOpen(false); 
-        }, 1200);
-
-        // Renvoyer le succès au modèle (pour qu'il termine sa réponse)
-        return "Command executed successfully.";
-      }
-    },
+    api: "/api/chat",
   });
+
+  // Pour éviter de déclencher la même navigation plusieurs fois pour le même message
+  const processedRef = useRef(new Set());
+
+  // Surveillance des messages pour déclencher la navigation via marqueurs [GOTO:/path]
+  useEffect(() => {
+    const lastMessage = chat.messages[chat.messages.length - 1];
+    if (!lastMessage || lastMessage.role !== "assistant") return;
+
+    const content = lastMessage.content || "";
+    // Log de debug pour voir ce que Atlas envoie réellement au client
+    if (content) console.log(`[Atlas DEBUG] Message reçu :`, content);
+    
+    const gotoMatch = content.match(/\[GOTO:(.+?)\]/);
+
+    if (gotoMatch) {
+      const path = gotoMatch[1].trim();
+      const messageId = lastMessage.id;
+
+      if (!processedRef.current.has(messageId)) {
+        console.log(`[Atlas CLIENT] Marqueur déctecté : Navigation vers ${path}`);
+        processedRef.current.add(messageId);
+        
+        // Navigation instantanée
+        router.push(path);
+      }
+    }
+  }, [chat.messages, router]);
 
   const toggleConsole = () => setIsOpen((prev) => !prev);
   const closeConsole = () => setIsOpen(false);

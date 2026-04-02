@@ -1,32 +1,40 @@
-# KINETIC_TERMINAL // PORTFOLIO
+# 🤖 ATLAS // OPERATOR HUB (PORTFOLIO)
 
-Bienvenue sur **Kinetic Terminal**, le portfolio de **Rayhan** (OP_ID: 992-DELTA-X / SYSTEM_IDENT: RAYHAN_DEV). Ce projet est une expérience visuelle immersive s'inspirant des interfaces informatiques d'anciennes générations, du cyberpunk, et de l'esthétique "Terminal / Neo-Data".
+Bienvenue sur le centre d'opérations de **Rayhan Touboui**, futur expert en **Data Intelligence Artificielle**. Ce portfolio est une expérience immersive conçue comme l'interface d'un opérateur système, fusionnant expertise technique (Data/IA) et vision stratégique (Business).
 
-Construit sur une architecture web moderne, ce portfolio sert à la fois de vitrine technologique et de CV interactif et s'articule comme le "hub d'un opérateur système".
+---
+
+## 🌟 L'Assistant IA : ATLAS
+La pièce maîtresse de ce portfolio est **Atlas**, un assistant IA intégré utilisant le **Vercel AI SDK** et le modèle **Gemini 1.5 Flash**. 
+Atlas n'est pas qu'un simple chatbot : il possède une base de connaissance complète du parcours de l'opérateur et peut **naviguer programmatiquement** l'utilisateur à travers les différentes sections du site.
+
+---
 
 ## 🚀 Noeuds de navigation (Pages)
 
-L'application est divisée en plusieurs fragments accessibles via un menu persistant :
+*   **[ Home ]** : Dashboard de télémétrie affichant les missions phares et la stack globale.
+*   **[ Operator Profile ]** : Identité de Rayhan, profil hybride (PSTB × Excelia) et barres d'aptitudes opérationnelles.
+*   **[ Mission Log ]** : Journal de bord regroupant 6 réalisations majeures (MarketPulse AI, EchoPulse, n8n Workflows, etc.) avec liens vers le code et les déploiements.
+*   **[ Skill Tree ]** : Arborescence technique structurée (Data Science, Engineering, BI & Dataviz).
+*   **[ Experience Timeline ]** : Parcours dual (Académique & Professionnel) retraçant les missions chez Orange, AESIO, Emmaüs (Allemagne), etc.
+*   **[ Side Quests ]** : Explorations et projets personnels (Fullstack React/Node, Études éthiques).
+*   **[ Playground ]** : Zone de démonstrations interactives incluant la console **MarketPulse Engine**.
 
-*   **[ Home ]** : Interface d'accueil avec dashboard de télémetrie et aperçu rapide du profil.
-*   **[ Operator Profile ]** : Dossier personnel avec les attributs techniques de l'opérateur (logique, créativité, optimisation) sous forme de statistiques RPG.
-*   **[ Mission Log ]** : Historique des déploiements et des projets majeurs formatés en grille stylisée (Bento grid).
-*   **[ Skill Tree ]** : Arborescence de compétences (Data Engineering, Machine Learning, Stat Analysis, etc.) avec barres d'aptitudes synchronisées.
-*   **[ Experience Timeline ]** : Frise chronologique duale retraçant les missions professionnelles passées (et la formation académique).
-*   **[ Side Quests ]** : Espace regroupant les expérimentations et objectifs annexes de l'opérateur.
-*   **[ Decrypt Demos ]** : Zone d'expérimentation visuelle (composants fracturés, terminaux système, déchiffrement simulé).
+---
 
 ## 🛠 Stack Technique
 
-*   **Framework :** [Next.js (App Router)](https://nextjs.org/)
-*   **Styles & UI :** [Tailwind CSS v4](https://tailwindcss.com/)
-*   **Composants Optimisés :** Le module natif `<Image />` de Next.js (`next/image`) est massivement exploité pour un chargement et une compression ultra-rapides.
-*   **Typographies :** Polices d'écriture Google avec `next/font` (*Space Grotesk* pour les affichages terminaux et titres, *Inter* pour la lisibilité).
-*   **Iconographie :** *Google Material Symbols (Outlined)* configurés en mode "Filled".
+*   **Framework :** [Next.js 15+ (App Router)](https://nextjs.org/) avec **React 19**.
+*   **Intelligence Artificielle :** [Vercel AI SDK](https://sdk.vercel.ai/) & Google Gemini 1.5 Flash.
+*   **Styles & UI :** [Tailwind CSS v4](https://tailwindcss.com/) avec design Glassmorphism et polices *Space Grotesk*.
+*   **Animations :** [Framer Motion](https://www.framer.com/motion/) pour les transitions fluides et les effets de terminal.
+*   **Runtime :** [Bun](https://bun.sh/) pour une exécution et une gestion de paquets ultra-rapide.
+
+---
 
 ## 💻 Guide d'installation rapide
 
-Pour amorcer la séquence de lancement locale sur votre propre système :
+Pour amorcer la séquence de lancement locale :
 
 1.  **Récupérer l'archive (Clone)**
     ```bash
@@ -34,29 +42,29 @@ Pour amorcer la séquence de lancement locale sur votre propre système :
     cd portfolio
     ```
 
-2.  **Compiler les dépendances (Install)**
+2.  **Installer les dépendances (Bun recommandé)**
     ```bash
-    npm install
-    # ou
     bun install
     ```
 
-3.  **Lancer le flux local (Dev Server)**
+3.  **Configurer les variables d'environnement**
+    Créez un fichier `.env.local` et ajoutez votre clé API Google Gemini :
+    ```env
+    GOOGLE_GENERATIVE_AI_API_KEY=votre_cle_ici
+    ```
+
+4.  **Lancer le flux local**
     ```bash
-    npm run dev
-    # ou
     bun run dev
     ```
 
-4.  **Accéder à l'interface**
-    Ouvrez [http://localhost:3000](http://localhost:3000) dans votre explorateur réseau.
+---
 
-## 🎨 Historique de Refonte
-
-Initialement composé à partir de multiples maquettes visuelles statiques, le projet a profité d'une harmonisation totale sur Next.js :
-- Création d'un layout global (`AppLayout`) pour fluidifier la navigation sous la forme neutre et réactive d'une SPA (Single Page Application).
-- Centralisation des tokens de couleurs (`primary`, `secondary`, `tertiary`) et des effets d'overlay (fond scanline, ombres portées) grâce dans un schéma commun par Tailwind CSS v4.
-- **Rapatriement des assets** : remplacement complet des dépendances cloud externes par du stockage et de l'optimisation locale côté serveur public.
+## 📉 Focus Projet : MarketPulse AI
+Ce portfolio intègre une console interactive dédiée au projet **MarketPulse AI**. 
+- **Backend :** FastAPI, MongoDB.
+- **ML :** Pipeline Scikit-Learn (Standardization → PCA → K-Means).
+- **Features :** Monitoring du score de Silhouette, variance expliquée et flux de news financières en temps réel.
 
 ---
-*> // STATUS: ONLINE // ENCRYPTION: SECURE // UPLINK: STABLE*
+*> // STATUS: MISSION READY // ENCRYPTION: SECURE // OPERATOR: TOUBOUI_R*
