@@ -131,14 +131,13 @@ export default function SlideUpConsole() {
                           }`}
                         >
                           {isBot ? (
-                            <ReactMarkdown 
-                              className="prose prose-invert max-w-none prose-sm 
+                            <div className="prose prose-invert max-w-none prose-sm 
                                 prose-p:leading-relaxed prose-p:mb-2 last:prose-p:mb-0
                                 prose-li:my-1 prose-ul:my-2 prose-strong:text-secondary 
                                 prose-headings:text-primary prose-headings:mb-2 prose-headings:mt-4 first:prose-headings:mt-0"
                             >
-                              {displayText}
-                            </ReactMarkdown>
+                              <ReactMarkdown>{displayText}</ReactMarkdown>
+                            </div>
                           ) : (
                             <div className="whitespace-pre-wrap">{displayText}</div>
                           )}

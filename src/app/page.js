@@ -14,7 +14,7 @@ export default function Home() {
           <div className="flex-1">
             <div className="inline-flex items-center gap-2 mb-6 px-4 py-2 glass rounded-full">
               <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse shadow-[0_0_8px_rgba(74,222,128,0.6)]"></span>
-              <span className="font-body text-xs text-on-surface-variant uppercase font-bold tracking-tighter">Disponible pour Alternance (24 mois)</span>
+              <span className="font-body text-xs text-on-surface-variant uppercase font-bold tracking-tighter">Disponible pour et Stage & Alternance (24 mois)</span>
             </div>
             
             <h2 className="font-headline text-5xl md:text-7xl font-black leading-none tracking-tight mb-8">
