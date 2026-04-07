@@ -17,7 +17,7 @@ export default function MissionLog() {
       status: "Déployé",
       description: "Customer Sentiment & Insight Engine. Dashboard identifiant les frictions produits via l'analyse automatisée de feedbacks non structurés (Sentiment Analysis & Topic Modeling).",
       stack: ["Python", "Dash", "TextBlob", "NLP"],
-      image: "/assets/images/mission_1.jpg",
+      image: "/assets/images/echopulse_cover_1775571889612.png",
       links: {
         live: "https://echopulse-customer-voice.onrender.com/",
         github: "https://github.com/RashOps/echopulse-customer-voice"
@@ -31,7 +31,7 @@ export default function MissionLog() {
       status: "Terminé",
       description: "Moteur de segmentation de marché en temps réel utilisant l'apprentissage non supervisé (Standardization → PCA → K-Means). API haute performance avec FastAPI et MongoDB.",
       stack: ["FastAPI", "MongoDB", "PCA", "K-Means", "uv"],
-      image: "/assets/images/mission_4.jpg",
+      image: "/assets/images/marketpulse_cover_1775571907615.png",
       links: {
         live: "/decrypt-demos/marketpulse-ai",
         github: "https://github.com/RashOps/MarketPulse-IA"
@@ -45,7 +45,7 @@ export default function MissionLog() {
       status: "Terminé",
       description: "Système de surveillance temps réel garantissant l'intégrité de bases critiques via l'écoute d'événements SQL (Triggers) et la génération d'alertes par agent IA (OpenAI).",
       stack: ["PostgreSQL", "n8n", "Docker", "OpenAI"],
-      image: "/assets/images/mission_2.jpg",
+      image: "/assets/images/workflow_cover_1775571927684.png",
       links: {
         github: "https://github.com/RashOps/postgreSQL_workflow"
       }
@@ -58,7 +58,7 @@ export default function MissionLog() {
       status: "Déployé",
       description: "Moteur de recommandation e-commerce basé sur le modèle RFM (Clustering K-Means) prescrivant des actions marketing ciblées (Rétention, Up-sell) selon les profils.",
       stack: ["Scikit-Learn", "Pandas", "Streamlit", "ML"],
-      image: "/assets/images/mission_3.jpg",
+      image: "/assets/images/rfm_cover_1775571944888.png",
       links: {
         live: "https://huggingface.co/spaces/RashOps/rfm-segmentation-kmeans",
         github: "https://github.com/RashOps/rfm-segmentation-kmeans"
@@ -72,7 +72,7 @@ export default function MissionLog() {
       status: "Déployé",
       description: "Application web multi-pages de data visualisation complète. Harmonisation de datasets complexes et création de dashboards interactifs avec Plotly et Seaborn.",
       stack: ["Streamlit", "Plotly", "Seaborn", "EDA"],
-      image: "/assets/images/home_card1.jpg",
+      image: "/assets/images/dataviz_cover_1775571963080.png",
       links: {
         live: "https://mon-projet-dataviz.streamlit.app/",
         github: "https://github.com/RashOps/projet-data-visualisation"
@@ -86,7 +86,7 @@ export default function MissionLog() {
       status: "Terminé",
       description: "Dashboard d'organisation personnelle (To-Do, Contacts, Notes) avec interface Glassmorphism. Architecture découplée React/Node.js et validation de données Joi.",
       stack: ["React", "Node.js", "Express", "Ky", "CSS3"],
-      image: "/assets/images/home_card2.jpg",
+      image: "/assets/images/omnihub_cover_1775571992593.png",
       links: {
         github: "https://github.com/RashOps/OmniHub"
       }
@@ -100,7 +100,7 @@ export default function MissionLog() {
     : projects.filter(p => p.filterGroup === activeFilter);
 
   return (
-    <div className="p-4 md:p-8 min-h-screen bg-background">
+    <div className="px-6 py-10 md:p-12 min-h-screen bg-background">
       {/* HEADER SECTION */}
       <section className="mb-12 mt-4" id="projects">
         <motion.div 
@@ -109,12 +109,12 @@ export default function MissionLog() {
           className="flex items-center gap-4 mb-2"
         >
           <div className="h-[2px] w-12 bg-gradient-to-r from-primary to-secondary rounded-full"></div>
-          <span className="font-body text-sm text-on-surface-variant uppercase tracking-widest font-bold opacity-60">Portfolio de projets</span>
+          <span className="font-body text-[10px] md:text-sm text-on-surface-variant uppercase tracking-widest font-bold opacity-60">Portfolio de projets</span>
         </motion.div>
         <motion.h1 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="text-5xl md:text-7xl font-headline font-bold tracking-tight text-on-surface mb-6"
+          className="text-4xl md:text-7xl font-headline font-bold tracking-tight text-on-surface mb-6"
         >
           Missions & <span className="gradient-text">Réalisations</span>
         </motion.h1>
@@ -134,7 +134,7 @@ export default function MissionLog() {
           <button
             key={filter}
             onClick={() => setActiveFilter(filter)}
-            className={`font-body text-xs px-6 py-2.5 rounded-xl transition-all duration-300 relative overflow-hidden ${
+            className={`font-body text-[10px] md:text-xs px-4 md:px-6 py-2.5 rounded-xl transition-all duration-300 relative overflow-hidden ${
               activeFilter === filter 
                 ? "bg-primary text-white font-bold shadow-[0_0_15px_rgba(167,139,250,0.3)]" 
                 : "glass text-on-surface-variant hover:text-primary hover:bg-white/5"

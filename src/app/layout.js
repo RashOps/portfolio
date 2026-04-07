@@ -1,6 +1,8 @@
 import { Inter, Space_Grotesk } from "next/font/google";
 import "./globals.css";
 import AppLayout from "@/components/AppLayout";
+import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -13,8 +15,21 @@ const spaceGrotesk = Space_Grotesk({
 });
 
 export const metadata = {
-  title: "Rayhan — Data & AI Portfolio",
+  title: "Rayhan Touboui — Data & AI Portfolio",
   description: "Étudiant en Data Science & Intelligence Artificielle. Double cursus Tech (PSTB) et Business (Excelia). Portfolio de projets, compétences et parcours.",
+  openGraph: {
+    title: "Rayhan Touboui — Data & AI Portfolio",
+    description: "Hybrid Profile: Data Science, Architecture & Business Strategy. Discover my missions and capabilities.",
+    url: "https://rayhan-portfolio.vercel.app", // Ideally should be replaced by actual domain if custom domain is used
+    siteName: "Rayhan Touboui Portfolio",
+    locale: "fr_FR",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Rayhan Touboui — Data & AI Portfolio",
+    description: "Hybrid Profile: Data Science, Architecture & Business Strategy.",
+  },
 };
 
 export default function RootLayout({ children }) {
@@ -27,6 +42,8 @@ export default function RootLayout({ children }) {
         <AppLayout>
           {children}
         </AppLayout>
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );

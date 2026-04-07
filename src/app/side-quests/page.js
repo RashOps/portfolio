@@ -25,13 +25,13 @@ export default function SideQuests() {
 
   return (
     <>
-      <div className="p-10 relative overflow-hidden min-h-[calc(100vh-64px)]">
+      <div className="px-6 py-10 md:p-12 relative overflow-hidden min-h-[calc(100vh-64px)]">
         <div className="absolute top-0 right-0 w-96 h-96 bg-tertiary/5 blur-[150px] rounded-full pointer-events-none"></div>
         
         <header className="relative z-10 mb-16">
           <div className="flex justify-between items-end gap-6 mb-8">
             <div>
-              <h1 className="text-5xl md:text-6xl font-headline font-bold tracking-tight leading-none mb-4">
+              <h1 className="text-4xl md:text-6xl font-headline font-bold tracking-tight leading-none mb-4">
                 Explorations
               </h1>
               <p className="text-on-surface-variant font-body text-sm max-w-2xl leading-relaxed">

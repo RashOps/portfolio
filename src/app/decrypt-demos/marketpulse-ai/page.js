@@ -153,7 +153,7 @@ export default function MarketPulseDemo() {
               <span className="material-symbols-outlined text-sm">arrow_back</span> Return to Hub
             </Link>
             <div className="space-y-1">
-              <h1 className="font-headline text-3xl font-bold tracking-tight">MarketPulse</h1>
+              <h1 className="font-headline text-2xl md:text-3xl font-bold tracking-tight">MarketPulse</h1>
               <div className="flex items-center gap-2">
                 <span className="text-[10px] font-mono text-primary bg-primary/10 px-2 py-0.5 rounded-full uppercase tracking-tighter border border-primary/20">CORE V1.2.0</span>
                 <div className={`w-1.5 h-1.5 rounded-full ${apiStatus === 'online' ? 'bg-green-400' : 'bg-orange-400'} animate-pulse`} />
@@ -230,11 +230,11 @@ export default function MarketPulseDemo() {
 
         {/* === COLUMN 2: TOPOLOGICAL VISUALIZATION === */}
         <main className="order-1 xl:order-2 space-y-8">
-          <div className="glass rounded-[32px] p-8 min-h-[600px] flex flex-col border border-white/10 relative overflow-hidden group">
+          <div className="glass rounded-[24px] md:rounded-[32px] p-5 md:p-8 min-h-[400px] md:min-h-[600px] flex flex-col border border-white/10 relative overflow-hidden group">
             {/* Header / Legend */}
             <div className="flex justify-between items-start relative z-10 mb-8">
               <div>
-                <h2 className="font-headline text-2xl font-bold mb-1">Topological Market Mapping</h2>
+                <h2 className="font-headline text-xl md:text-2xl font-bold mb-1">Topological Market Mapping</h2>
                 <div className="flex items-center gap-4">
                   <p className="text-[10px] text-on-surface-variant uppercase font-bold tracking-widest opacity-60">Mapping de {formattedPca.length} regimes latents</p>
                   <div className="h-[1px] w-8 bg-white/10" />
@@ -306,7 +306,7 @@ export default function MarketPulseDemo() {
             </div>
 
             {/* Metrics Footer */}
-            <div className="mt-8 grid grid-cols-4 gap-6 pt-8 border-t border-white/5 relative z-10">
+            <div className="mt-8 grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 pt-8 border-t border-white/5 relative z-10">
                {[
                  { label: "Explained Var.", value: metrics?.results?.total_variance_explained ? (metrics.results.total_variance_explained * 100).toFixed(1) + '%' : "---", color: "text-primary" },
                  { label: "Cluster Regimes", value: metrics?.results?.optimal_k || "---", color: "text-tertiary" },
@@ -366,7 +366,7 @@ export default function MarketPulseDemo() {
 
         {/* === COLUMN 3: INTELLIGENCE FEED === */}
         <aside className="order-3 space-y-8 flex flex-col">
-           <div className="glass rounded-[32px] p-6 border border-white/10 flex flex-col h-full bg-surface-container-low/50 sticky top-10 overflow-hidden">
+           <div className="glass rounded-[24px] md:rounded-[32px] p-6 border border-white/10 flex flex-col h-[500px] md:h-full bg-surface-container-low/50 xl:sticky xl:top-10 overflow-hidden">
               <div className="flex items-center justify-between mb-8">
                 <div className="flex items-center gap-2">
                   <span className="material-symbols-outlined text-primary">dynamic_feed</span>
