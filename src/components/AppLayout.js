@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { BotProvider, useBot } from "./bot/BotProvider";
 import FloatingWidget from "./bot/FloatingWidget";
 import SlideUpConsole from "./bot/SlideUpConsole";
@@ -11,6 +12,12 @@ function InnerLayout({ children }) {
   const pathname = usePathname();
   const { toggleConsole } = useBot();
   const [toast, setToast] = useState(null);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  // Close menu when pathname changes
+  useEffect(() => {
+    setIsMenuOpen(false);
+  }, [pathname]);
 
   const showToast = (message) => {
     setToast(message);
@@ -42,6 +49,14 @@ function InnerLayout({ children }) {
       {/* TopAppBar */}
       <header className="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-6 py-4 bg-surface/80 backdrop-blur-xl border-b border-white/5">
         <div className="flex items-center gap-4">
+          <button 
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            className="md:hidden text-on-surface p-2 hover:bg-white/5 rounded-lg active:scale-95 transition-all"
+          >
+            <span className="material-symbols-outlined text-2xl">
+              {isMenuOpen ? 'close' : 'menu'}
+            </span>
+          </button>
           <Link href="/">
             <h1 className="font-headline text-xl font-bold gradient-text tracking-tight">
               Rayhan.
@@ -110,7 +125,7 @@ function InnerLayout({ children }) {
           
           <div className="my-3 border-t border-white/5 mx-6"></div>
           
-          <a href="https://linkedin.com/" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 text-on-surface-variant mx-3 px-4 py-2.5 rounded-lg hover:bg-white/5 hover:text-on-surface transition-all duration-200">
+          <a href="https://www.linkedin.com/in/rayhan-seh-fred-touboui" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 text-on-surface-variant mx-3 px-4 py-2.5 rounded-lg hover:bg-white/5 hover:text-on-surface transition-all duration-200">
             <span className="material-symbols-outlined text-lg">hub</span>
             LinkedIn
           </a>
@@ -138,6 +153,61 @@ function InnerLayout({ children }) {
         </div>
       </aside>
 
+      {/* Mobile Navigation Drawer */}
+      <AnimatePresence>
+        {isMenuOpen && (
+          <>
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsMenuOpen(false)}
+              className="fixed inset-0 bg-surface/80 backdrop-blur-md z-[60] md:hidden"
+            />
+            <motion.div 
+              initial={{ x: "-100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "-100%" }}
+              transition={{ type: "spring", damping: 25, stiffness: 200 }}
+              className="fixed left-0 top-0 h-screen w-[85%] max-w-xs z-[70] bg-surface-container-low border-r border-white/5 pt-20 flex flex-col md:hidden"
+            >
+              <nav className="flex-grow flex flex-col gap-1 font-body text-base overflow-y-auto">
+                {navLinks.map((link) => {
+                  const isActive = pathname === link.path;
+                  return (
+                    <Link
+                      key={link.name}
+                      href={link.path}
+                      className={
+                        isActive
+                          ? "flex items-center gap-4 bg-primary/10 text-primary rounded-lg mx-4 px-5 py-3.5 font-medium"
+                          : "flex items-center gap-4 text-on-surface-variant mx-4 px-5 py-3.5 rounded-lg active:bg-white/5"
+                      }
+                    >
+                      <span className="material-symbols-outlined text-xl">{link.icon}</span>
+                      {link.name}
+                    </Link>
+                  );
+                })}
+                
+                <div className="my-4 border-t border-white/5 mx-8"></div>
+                
+                <a href="https://www.linkedin.com/in/rayhan-seh-fred-touboui" target="_blank" rel="noopener noreferrer" className="flex items-center gap-4 text-on-surface-variant mx-4 px-5 py-3.5 rounded-lg">
+                  <span className="material-symbols-outlined text-xl">hub</span>
+                  LinkedIn
+                </a>
+              </nav>
+
+              <div className="p-6 border-t border-white/5">
+                <button onClick={toggleConsole} className="w-full bg-gradient-to-r from-primary to-tertiary text-white font-headline font-bold text-sm py-4 rounded-xl tracking-wide">
+                  ✦ Assistant Atlas
+                </button>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+
       {/* Main Content Canvas */}
       <main className="md:ml-64 pt-16 min-h-screen relative">
         {children}
@@ -153,7 +223,7 @@ function InnerLayout({ children }) {
               </p>
             </div>
             <div className="flex items-center gap-6">
-              <a href="https://linkedin.com/" target="_blank" rel="noopener noreferrer" className="text-on-surface-variant hover:text-primary transition-colors">
+              <a href="https://www.linkedin.com/in/rayhan-seh-fred-touboui" target="_blank" rel="noopener noreferrer" className="text-on-surface-variant hover:text-primary transition-colors">
                 <span className="material-symbols-outlined">public</span>
               </a>
               <a href="https://github.com/RashOps" target="_blank" rel="noopener noreferrer" className="text-on-surface-variant hover:text-primary transition-colors">
