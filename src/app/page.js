@@ -217,9 +217,9 @@ export default function Home() {
               {[
                 { name: "Python", level: "Avancé" },
                 { name: "SQL", level: "Avancé" },
-                { name: "FastAPI", level: "Maîtrisé" },
+                { name: "FastAPI", level: "Débutant" },
                 { name: "Docker", level: "Intermédiaire" },
-                { name: "React", level: "Maîtrisé" },
+                { name: "React", level: "Intermédiaire" },
                 { name: "n8n", level: "Avancé" }
               ].map((skill, i) => (
                 <StaggerItem key={i} className="glass rounded-xl p-4 text-center card-hover group">

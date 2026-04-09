@@ -20,7 +20,7 @@ export const metadata = {
   openGraph: {
     title: "Rayhan Touboui — Data & AI Portfolio",
     description: "Hybrid Profile: Data Science, Architecture & Business Strategy. Discover my missions and capabilities.",
-    url: "https://rayhan-portfolio.vercel.app", // Ideally should be replaced by actual domain if custom domain is used
+    url: "https://www.rayhan-touboui.tech",
     siteName: "Rayhan Touboui Portfolio",
     locale: "fr_FR",
     type: "website",
