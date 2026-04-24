@@ -125,7 +125,7 @@ function InnerLayout({ children }) {
           
           <div className="my-3 border-t border-white/5 mx-6"></div>
           
-          <a href="https://www.linkedin.com/in/rayhan-seh-fred-touboui" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 text-on-surface-variant mx-3 px-4 py-2.5 rounded-lg hover:bg-white/5 hover:text-on-surface transition-all duration-200">
+          <a href="https://www.linkedin.com/in/rayhan-touboui-machine-learning-powerbi-nlp-data-science" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 text-on-surface-variant mx-3 px-4 py-2.5 rounded-lg hover:bg-white/5 hover:text-on-surface transition-all duration-200">
             <span className="material-symbols-outlined text-lg">hub</span>
             LinkedIn
           </a>
