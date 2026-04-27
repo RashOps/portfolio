@@ -79,7 +79,7 @@ export default function Home() {
           </Link>
         </FadeIn>
         
-        <StaggerContainer className="grid grid-cols-1 md:grid-cols-12 gap-6 h-auto md:h-[600px]">
+        <StaggerContainer className="grid grid-cols-1 md:grid-cols-12 gap-6">
           {/* Main Featured Card - MarketPulse AI */}
           <StaggerItem className="md:col-span-7 relative">
             <Link href="/decrypt-demos/marketpulse-ai" className="h-full w-full glass rounded-2xl relative overflow-hidden group card-hover block">
@@ -106,7 +106,30 @@ export default function Home() {
           </StaggerItem>
           
           {/* Secondary Cards Stack */}
-          <div className="md:col-span-5 grid grid-cols-1 grid-rows-none md:grid-rows-2 gap-6">
+          <div className="md:col-span-5 grid grid-cols-1 grid-rows-none md:grid-rows-3 gap-6">
+            
+            {/* FinSight RAG */}
+            <StaggerItem className="relative h-full">
+              <Link href="/decrypt-demos/finsight-rag" className="h-full glass rounded-2xl p-6 min-h-[180px] relative overflow-hidden card-hover flex flex-col justify-center block group">
+                <Image 
+                  fill
+                  alt="FinSight RAG Engine" 
+                  className="object-cover opacity-20 group-hover:scale-110 transition-transform duration-700 z-0" 
+                  src="/assets/images/finsight_cover.png"
+                />
+                <div className="absolute top-4 right-4 z-10">
+                  <span className="material-symbols-outlined text-green-400/50 text-4xl group-hover:text-green-400 transition-colors">hub</span>
+                </div>
+                <div className="relative z-10">
+                  <span className="font-label text-xs text-green-400 mb-2 tracking-wide uppercase font-bold">Generative AI</span>
+                  <h4 className="font-headline text-xl font-bold text-on-surface mb-2">FinSight RAG</h4>
+                  <p className="font-body text-xs text-on-surface-variant line-clamp-2">
+                    Moteur de recherche sémantique financier (FastAPI, LlamaIndex, Qdrant).
+                  </p>
+                </div>
+              </Link>
+            </StaggerItem>
+
             {/* EchoPulse */}
             <StaggerItem className="relative h-full">
               <Link href="/mission-log" className="h-full glass rounded-2xl p-6 min-h-[180px] relative overflow-hidden card-hover flex flex-col justify-center block group">

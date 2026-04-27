@@ -445,21 +445,7 @@ export default function MarketPulseDemo() {
         </aside>
       </div>
 
-      {/* Grid Canvas Helper */}
-      <style jsx global>{`
-        .custom-scrollbar::-webkit-scrollbar {
-          width: 2px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-track {
-          background: rgba(255, 255, 255, 0.02);
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-          background: rgba(167, 139, 250, 0.1);
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-          background: rgba(167, 139, 250, 0.3);
-        }
-      `}</style>
+
     </div>
   );
 }

@@ -27,6 +27,15 @@ export default function DecryptDemos() {
       color: "tertiary",
       link: "/decrypt-demos/marketpulse-ai",
       internal: true
+    },
+    {
+      title: "FinSight RAG",
+      icon: "hub",
+      status: "Accès Privé",
+      description: "Console de recherche RAG connectée à une API FastAPI. Extraction sémantique (LlamaIndex, Qdrant) et génération augmentée (Groq Llama-3).",
+      color: "green-400",
+      link: "/decrypt-demos/finsight-rag",
+      internal: true
     }
   ];
 
@@ -49,7 +58,7 @@ export default function DecryptDemos() {
           <div className="glass rounded-xl p-4">
             <div className="flex justify-between items-center mb-2">
               <span className="font-body text-sm text-on-surface-variant">Services Opérationnels</span>
-              <span className="font-headline text-sm text-primary font-bold">3 / 3</span>
+              <span className="font-headline text-sm text-primary font-bold">4 / 4</span>
             </div>
             <div className="h-2 bg-white/5 rounded-full overflow-hidden">
               <div className="bg-gradient-to-r from-primary to-tertiary h-full rounded-full transition-all duration-1000" style={{ width: "100%" }}></div>

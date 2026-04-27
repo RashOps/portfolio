@@ -180,4 +180,152 @@ export const apiService = {
   }
 };
 
+/**
+ * API SERVICE - FinSight RAG
+ * Interfacage avec le moteur RAG déployé sur Hugging Face
+ */
+const FINSIGHT_API_URL = "https://rashops-finsight-rag.hf.space";
+
+export const finSightApiService = {
+  /**
+   * Effectue une requête sémantique RAG
+   * Endpoint: POST /query
+   */
+  queryRAG: async (query, maxResults = 5) => {
+    if (!FINSIGHT_API_URL) return null;
+    try {
+      const response = await fetch(`${FINSIGHT_API_URL}/query`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ query, max_results: maxResults })
+      });
+      if (!response.ok) throw new Error("Erreur réseau FinSight RAG");
+      return await response.json();
+    } catch (error) {
+      console.error("Erreur queryRAG:", error);
+      return null;
+    }
+  },
+
+  /**
+   * Récupère l'inventaire des articles paginé
+   * Endpoint: GET /articles
+   */
+  getArticles: async (skip = 0, limit = 10, source = null, status = "all") => {
+    if (!FINSIGHT_API_URL) return null;
+    try {
+      let url = `${FINSIGHT_API_URL}/articles?skip=${skip}&limit=${limit}&status=${encodeURIComponent(status)}`;
+      if (source) url += `&source=${encodeURIComponent(source)}`;
+      
+      const response = await fetch(url);
+      if (!response.ok) throw new Error("Erreur réseau FinSight RAG");
+      return await response.json();
+    } catch (error) {
+      console.error("Erreur getArticles:", error);
+      return null;
+    }
+  },
+
+  /**
+   * Vérifie la santé générale du moteur
+   * Endpoint: GET /health
+   */
+  getHealth: async () => {
+    if (!FINSIGHT_API_URL) return null;
+    try {
+      const response = await fetch(`${FINSIGHT_API_URL}/health`);
+      if (!response.ok) throw new Error("Erreur réseau FinSight RAG");
+      return await response.json();
+    } catch (error) {
+      console.error("Erreur getHealth:", error);
+      return { status: "offline" };
+    }
+  },
+
+  /**
+   * Récupère les statistiques détaillées (Status)
+   * Endpoint: GET /status
+   */
+  getStatus: async () => {
+    if (!FINSIGHT_API_URL) return null;
+    try {
+      const response = await fetch(`${FINSIGHT_API_URL}/status`);
+      if (!response.ok) throw new Error("Erreur réseau FinSight RAG");
+      return await response.json();
+    } catch (error) {
+      console.error("Erreur getStatus:", error);
+      return null;
+    }
+  },
+
+  /**
+   * Récupère l'état de la base MongoDB
+   * Endpoint: GET /db/status
+   */
+  getDbStatus: async () => {
+    if (!FINSIGHT_API_URL) return null;
+    try {
+      const response = await fetch(`${FINSIGHT_API_URL}/db/status`);
+      if (!response.ok) throw new Error("Erreur réseau FinSight RAG");
+      return await response.json();
+    } catch (error) {
+      console.error("Erreur getDbStatus:", error);
+      return null;
+    }
+  },
+
+  /**
+   * Récupère les métriques des articles (vectorisés vs bruts)
+   * Endpoint: GET /articles/status
+   */
+  getArticlesStatus: async () => {
+    if (!FINSIGHT_API_URL) return null;
+    try {
+      const response = await fetch(`${FINSIGHT_API_URL}/articles/status`);
+      if (!response.ok) throw new Error("Erreur réseau FinSight RAG");
+      return await response.json();
+    } catch (error) {
+      console.error("Erreur getArticlesStatus:", error);
+      return null;
+    }
+  },
+
+  /**
+   * Déclenche le pipeline d'ingestion (Scraping RSS)
+   * Endpoint: POST /fetch-articles
+   */
+  triggerScraping: async (limit = 3) => {
+    if (!FINSIGHT_API_URL) return null;
+    try {
+      const response = await fetch(`${FINSIGHT_API_URL}/fetch-articles?limit=${limit}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' }
+      });
+      if (!response.ok) throw new Error("Erreur déclenchement Scraping");
+      return await response.json();
+    } catch (error) {
+      console.error("Erreur triggerScraping:", error);
+      return null;
+    }
+  },
+
+  /**
+   * Déclenche le pipeline de vectorisation asynchrone (Cohere -> Qdrant)
+   * Endpoint: POST /run-vectorizer
+   */
+  triggerVectorization: async (limit = 10) => {
+    if (!FINSIGHT_API_URL) return null;
+    try {
+      const response = await fetch(`${FINSIGHT_API_URL}/run-vectorizer?limit=${limit}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' }
+      });
+      if (!response.ok) throw new Error("Erreur déclenchement Vectorisation");
+      return await response.json();
+    } catch (error) {
+      console.error("Erreur triggerVectorization:", error);
+      return null;
+    }
+  }
+};
 
