@@ -1,9 +1,15 @@
+"use client";
+
+import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { FadeIn } from "@/components/ui/FadeIn";
 import { StaggerContainer, StaggerItem } from "@/components/ui/StaggerContainer";
+import CVModal from '@/components/ui/CVModal';
 
 export default function OperatorProfile() {
+  const [isCVOpen, setIsCVOpen] = useState(false);
+
   return (
     <main className="p-6 md:p-10 lg:p-12 relative overflow-hidden">
       {/* Background Decor */}
@@ -39,6 +45,24 @@ export default function OperatorProfile() {
                   </div>
                 </div>
               </div>
+            </StaggerItem>
+
+            <StaggerItem className="flex gap-4">
+              <button 
+                onClick={() => setIsCVOpen(true)}
+                className="flex-1 glass rounded-xl py-4 flex items-center justify-center gap-3 hover:bg-primary/10 hover:border-primary/30 transition-all group"
+              >
+                <span className="material-symbols-outlined text-primary group-hover:scale-110 transition-transform">visibility</span>
+                <span className="font-headline text-xs font-bold uppercase tracking-widest text-on-surface">Visualiser CV</span>
+              </button>
+              <a 
+                href="/assets/cv.pdf" 
+                download
+                className="w-14 glass rounded-xl flex items-center justify-center text-on-surface-variant hover:text-primary transition-colors"
+                title="Télécharger directement"
+              >
+                <span className="material-symbols-outlined">download</span>
+              </a>
             </StaggerItem>
             
             <StaggerItem className="glass rounded-2xl p-6 space-y-4">
@@ -172,6 +196,9 @@ export default function OperatorProfile() {
           </div>
         </FadeIn>
       </div>
+
+      {/* CV Modal Overlay */}
+      <CVModal isOpen={isCVOpen} onClose={() => setIsCVOpen(false)} />
     </main>
   );
 }
