@@ -10,6 +10,20 @@ export default function MissionLog() {
 
   const projects = [
     {
+      id: "finsight-rag",
+      title: "FinSight RAG",
+      category: "Generative AI & Architecture",
+      filterGroup: "Machine Learning",
+      status: "Déployé",
+      description: "Moteur RAG financier Production-Ready. Ingestion continue (RSS), vectorisation asynchrone (Cohere) et génération augmentée (Groq/Llama-3) via une API FastAPI robuste.",
+      stack: ["FastAPI", "LlamaIndex", "Qdrant", "MongoDB", "Groq"],
+      image: "/assets/images/finsight_cover.png",
+      links: {
+        live: "/decrypt-demos/finsight-rag",
+        github: "https://github.com/RashOps/FinSight-RAG"
+      }
+    },
+    {
       id: "echopulse",
       title: "EchoPulse",
       category: "NLP & Data Science",

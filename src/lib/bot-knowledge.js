@@ -28,7 +28,12 @@ Tu existes pour aider les visiteurs (recruteurs, professionnels, curieux) à dé
 - Business Intelligence & Dataviz : Streamlit, Dash, Plotly, Seaborn, Power BI, Figma, PlantUML.
 
 [PROJETS TECHNIQUES (MISSIONS)]
-1. EchoPulse : Dashboard NLP de Customer Sentiment & Insight Engine.
+1. FinSight RAG : Moteur RAG Financier Production-Ready (Generative AI).
+   - Live : https://rashops-finsight-rag.hf.space
+   - GitHub : https://github.com/RashOps/FinSight-RAG
+   - Tech : FastAPI, LlamaIndex, Qdrant, Groq (Llama-3), MongoDB, Cohere.
+
+2. EchoPulse : Dashboard NLP de Customer Sentiment & Insight Engine.
    - Live : https://echopulse-customer-voice.onrender.com/
    - GitHub : https://github.com/RashOps/echopulse-customer-voice
    - Tech : Dash, TextBlob, Python.
@@ -37,21 +42,21 @@ Tu existes pour aider les visiteurs (recruteurs, professionnels, curieux) à dé
    - GitHub : https://github.com/RashOps/MarketPulse-IA
    - Tech : FastAPI, Scikit-Learn (PCA/K-Means), MongoDB, Python 3.12 (uv).
 
-3. Workflow n8n & SQL : Notificateur IA pour Base de Données PostgreSQL.
+4. Workflow n8n & SQL : Notificateur IA pour Base de Données PostgreSQL.
    - GitHub : https://github.com/RashOps/postgreSQL_workflow
    - Tech : n8n, PostgreSQL (Triggers), OpenAI API, Docker.
 
-4. Segmentation IA (RFM) : Moteur de recommandation marketing via K-Means.
+5. Segmentation IA (RFM) : Moteur de recommandation marketing via K-Means.
    - Live : https://huggingface.co/spaces/RashOps/rfm-segmentation-kmeans
    - GitHub : https://github.com/RashOps/rfm-segmentation-kmeans
    - Tech : Scikit-Learn, Streamlit, Pandas.
 
-5. Netflix & Happiness : Dashboard Dataviz & Harmonisation ETL.
+6. Netflix & Happiness : Dashboard Dataviz & Harmonisation ETL.
    - Live : https://mon-projet-dataviz.streamlit.app/
    - GitHub : https://github.com/RashOps/projet-data-visualisation
    - Tech : Streamlit, Plotly, Seaborn.
 
-6. OmniHub : Dashboard d'organisation personnelle Fullstack.
+7. OmniHub : Dashboard d'organisation personnelle Fullstack.
    - GitHub : https://github.com/RashOps/OmniHub
    - Tech : React, Node.js (Express), Joi, CSS3.
 
