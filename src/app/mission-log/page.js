@@ -1,111 +1,46 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
+import { missionService } from "@/lib/supabase-client";
 
 export default function MissionLog() {
   const [activeFilter, setActiveFilter] = useState("Tous");
+  const [projects, setProjects] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const projects = [
-    {
-      id: "finsight-rag",
-      title: "FinSight RAG",
-      category: "Generative AI & Architecture",
-      filterGroup: "Machine Learning",
-      status: "Déployé",
-      description: "Moteur RAG financier Production-Ready. Ingestion continue (RSS), vectorisation asynchrone (Cohere) et génération augmentée (Groq/Llama-3) via une API FastAPI robuste.",
-      stack: ["FastAPI", "LlamaIndex", "Qdrant", "MongoDB", "Groq"],
-      image: "/assets/images/finsight_cover.png",
-      links: {
-        live: "/decrypt-demos/finsight-rag",
-        github: "https://github.com/RashOps/FinSight-RAG"
-      }
-    },
-    {
-      id: "echopulse",
-      title: "EchoPulse",
-      category: "NLP & Data Science",
-      filterGroup: "Machine Learning",
-      status: "Déployé",
-      description: "Customer Sentiment & Insight Engine. Dashboard identifiant les frictions produits via l'analyse automatisée de feedbacks non structurés (Sentiment Analysis & Topic Modeling).",
-      stack: ["Python", "Dash", "TextBlob", "NLP"],
-      image: "/assets/images/echopulse_cover_1775571889612.png",
-      links: {
-        live: "https://echopulse-customer-voice.onrender.com/",
-        github: "https://github.com/RashOps/echopulse-customer-voice"
-      }
-    },
-    {
-      id: "marketpulse",
-      title: "MarketPulse AI",
-      category: "ML Engine & Backend",
-      filterGroup: "Machine Learning",
-      status: "Terminé",
-      description: "Moteur de segmentation de marché en temps réel utilisant l'apprentissage non supervisé (Standardization → PCA → K-Means). API haute performance avec FastAPI et MongoDB.",
-      stack: ["FastAPI", "MongoDB", "PCA", "K-Means", "uv"],
-      image: "/assets/images/marketpulse_cover_1775571907615.png",
-      links: {
-        live: "/decrypt-demos/marketpulse-ai",
-        github: "https://github.com/RashOps/MarketPulse-IA"
-      }
-    },
-    {
-      id: "n8n-workflow",
-      title: "Workflow n8n & SQL",
-      category: "DataOps & Automatisation",
-      filterGroup: "Data Engineering",
-      status: "Terminé",
-      description: "Système de surveillance temps réel garantissant l'intégrité de bases critiques via l'écoute d'événements SQL (Triggers) et la génération d'alertes par agent IA (OpenAI).",
-      stack: ["PostgreSQL", "n8n", "Docker", "OpenAI"],
-      image: "/assets/images/workflow_cover_1775571927684.png",
-      links: {
-        github: "https://github.com/RashOps/postgreSQL_workflow"
-      }
-    },
-    {
-      id: "segmentation-rfm",
-      title: "Segmentation IA (RFM)",
-      category: "Machine Learning",
-      filterGroup: "Machine Learning",
-      status: "Déployé",
-      description: "Moteur de recommandation e-commerce basé sur le modèle RFM (Clustering K-Means) prescrivant des actions marketing ciblées (Rétention, Up-sell) selon les profils.",
-      stack: ["Scikit-Learn", "Pandas", "Streamlit", "ML"],
-      image: "/assets/images/rfm_cover_1775571944888.png",
-      links: {
-        live: "https://huggingface.co/spaces/RashOps/rfm-segmentation-kmeans",
-        github: "https://github.com/RashOps/rfm-segmentation-kmeans"
-      }
-    },
-    {
-      id: "dataviz-dashboard",
-      title: "Netflix & Happiness",
-      category: "Data Visualisation",
-      filterGroup: "Machine Learning",
-      status: "Déployé",
-      description: "Application web multi-pages de data visualisation complète. Harmonisation de datasets complexes et création de dashboards interactifs avec Plotly et Seaborn.",
-      stack: ["Streamlit", "Plotly", "Seaborn", "EDA"],
-      image: "/assets/images/dataviz_cover_1775571963080.png",
-      links: {
-        live: "https://mon-projet-dataviz.streamlit.app/",
-        github: "https://github.com/RashOps/projet-data-visualisation"
-      }
-    },
-    {
-      id: "omnihub",
-      title: "OmniHub",
-      category: "Fullstack Development",
-      filterGroup: "Fullstack",
-      status: "Terminé",
-      description: "Dashboard d'organisation personnelle (To-Do, Contacts, Notes) avec interface Glassmorphism. Architecture découplée React/Node.js et validation de données Joi.",
-      stack: ["React", "Node.js", "Express", "Ky", "CSS3"],
-      image: "/assets/images/omnihub_cover_1775571992593.png",
-      links: {
-        github: "https://github.com/RashOps/OmniHub"
+  useEffect(() => {
+    async function loadMissions() {
+      try {
+        const data = await missionService.getMissions();
+        // Mapping Supabase data to the expected frontend structure
+        const formattedProjects = data.map(m => ({
+          id: m.id,
+          title: m.title,
+          category: m.category || "Mission Officielle",
+          filterGroup: m.filterGroup || "Tous",
+          status: m.status,
+          description: m.description,
+          stack: m.tech_stack || [],
+          image: m.image_url || "/assets/images/workflow_cover_1775571927684.png",
+          links: {
+            live: m.url || null,
+            github: m.github_url || null
+          }
+        }));
+        setProjects(formattedProjects);
+      } catch (error) {
+        console.error("Erreur lors du chargement des missions", error);
+      } finally {
+        setIsLoading(false);
       }
     }
-  ];
+    loadMissions();
+  }, []);
+
+
 
   const filters = ["Tous", "Machine Learning", "Data Engineering", "Fullstack"];
 
@@ -136,10 +71,20 @@ export default function MissionLog() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.2 }}
-          className="max-w-2xl text-on-surface-variant font-body text-sm leading-relaxed"
+          className="max-w-2xl text-on-surface-variant font-body text-sm leading-relaxed mb-8"
         >
           Une sélection de mes projets techniques alliant Data Science, Engineering et vision Business. Chaque mission illustre une transformation de données complexes en actifs stratégiques.
         </motion.p>
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
+        >
+          <Link href="/decrypt-demos" className="inline-flex items-center gap-3 bg-secondary/10 text-secondary hover:bg-secondary/20 hover:border-secondary/50 transition-all border border-secondary/20 px-6 py-3 rounded-xl font-headline font-bold uppercase tracking-widest text-xs shadow-lg">
+            <span className="material-symbols-outlined text-lg">science</span>
+            Accéder au Playground (Démos)
+          </Link>
+        </motion.div>
       </section>
 
       {/* FILTERS */}
@@ -160,11 +105,16 @@ export default function MissionLog() {
       </div>
 
       {/* PROJECT GRID */}
-      <motion.div 
-        layout
-        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
-      >
-        <AnimatePresence mode="popLayout">
+      {isLoading ? (
+        <div className="flex justify-center py-20 text-primary">
+          <span className="material-symbols-outlined animate-spin text-4xl">autorenew</span>
+        </div>
+      ) : (
+        <motion.div 
+          layout
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+        >
+          <AnimatePresence mode="popLayout">
           {filteredProjects.map((project) => (
             <motion.div
               layout
@@ -196,13 +146,21 @@ export default function MissionLog() {
                   <div className="absolute inset-0 bg-gradient-to-t from-surface/90 via-surface/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 flex items-end p-5">
                     <div className="flex gap-3 w-full translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
                       {project.links.live && (
-                        <a href={project.links.live} target="_blank" rel="noopener noreferrer" className="flex-1 bg-primary text-white text-center py-2.5 rounded-xl text-[10px] font-black uppercase hover:bg-primary-dim transition-all shadow-lg flex items-center justify-center gap-1.5 active:scale-95">
-                          <span className="material-symbols-outlined text-sm">visibility</span> Live Demo
+                        project.links.live.startsWith('http') ? (
+                          <a href={project.links.live} target="_blank" rel="noopener noreferrer" className="flex-1 bg-primary text-white text-center py-2.5 rounded-xl text-[10px] font-black uppercase hover:bg-primary-dim transition-all shadow-lg flex items-center justify-center gap-1.5 active:scale-95">
+                            <span className="material-symbols-outlined text-sm">visibility</span> Live Demo
+                          </a>
+                        ) : (
+                          <Link href={project.links.live} className="flex-1 bg-primary text-white text-center py-2.5 rounded-xl text-[10px] font-black uppercase hover:bg-primary-dim transition-all shadow-lg flex items-center justify-center gap-1.5 active:scale-95">
+                            <span className="material-symbols-outlined text-sm">visibility</span> Live Demo
+                          </Link>
+                        )
+                      )}
+                      {project.links.github && (
+                        <a href={project.links.github} target="_blank" rel="noopener noreferrer" className={`flex-1 ${project.links.live ? 'bg-white/10 backdrop-blur-md' : 'bg-primary'} text-white text-center py-2.5 rounded-xl text-[10px] font-black uppercase hover:bg-white/20 transition-all shadow-lg flex items-center justify-center gap-1.5 active:scale-95`}>
+                          <span className="material-symbols-outlined text-sm">code</span> View Code
                         </a>
                       )}
-                      <a href={project.links.github} target="_blank" rel="noopener noreferrer" className={`flex-1 ${project.links.live ? 'bg-white/10 backdrop-blur-md' : 'bg-primary'} text-white text-center py-2.5 rounded-xl text-[10px] font-black uppercase hover:bg-white/20 transition-all shadow-lg flex items-center justify-center gap-1.5 active:scale-95`}>
-                        <span className="material-symbols-outlined text-sm">code</span> View Code
-                      </a>
                     </div>
                   </div>
                 </div>
@@ -221,8 +179,9 @@ export default function MissionLog() {
               </div>
             </motion.div>
           ))}
-        </AnimatePresence>
-      </motion.div>
+          </AnimatePresence>
+        </motion.div>
+      )}
 
       {/* Decorative footer */}
       <footer className="mt-24 mb-12 flex flex-col items-center">
