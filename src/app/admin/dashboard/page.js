@@ -52,7 +52,7 @@ export default function AdminDashboard() {
   const [profileForm, setProfileForm] = useState({
     name: "", status: "", location: "", specialization: "", formation_text: "", objectives_text: "",
     versatility_dynamic: true, versatility_manual: 86,
-    show_tech_stack: true, show_experiences: true, cv_url: ""
+    show_tech_stack: true, show_experiences: true, cv_url: "", github_url: "", linkedin_url: ""
   });
 
   // Form States (Experiences)
@@ -486,6 +486,8 @@ export default function AdminDashboard() {
                   <input required type="text" placeholder="Statut (ex: Data Engineer)" className="bg-surface-container rounded-lg px-4 py-3 text-sm w-full" value={profileForm.status} onChange={e => setProfileForm({...profileForm, status: e.target.value})} />
                   <input required type="text" placeholder="Localisation" className="bg-surface-container rounded-lg px-4 py-3 text-sm w-full" value={profileForm.location} onChange={e => setProfileForm({...profileForm, location: e.target.value})} />
                   <input required type="text" placeholder="Spécialisation" className="bg-surface-container rounded-lg px-4 py-3 text-sm w-full" value={profileForm.specialization} onChange={e => setProfileForm({...profileForm, specialization: e.target.value})} />
+                  <input type="url" placeholder="URL Profil GitHub (optionnel)" className="bg-surface-container rounded-lg px-4 py-3 text-sm w-full" value={profileForm.github_url || ""} onChange={e => setProfileForm({...profileForm, github_url: e.target.value})} />
+                  <input type="url" placeholder="URL Profil LinkedIn (optionnel)" className="bg-surface-container rounded-lg px-4 py-3 text-sm w-full" value={profileForm.linkedin_url || ""} onChange={e => setProfileForm({...profileForm, linkedin_url: e.target.value})} />
                 </div>
                 
                 <div className="glass rounded-xl p-4 border border-white/5 space-y-4">

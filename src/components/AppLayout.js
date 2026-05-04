@@ -15,6 +15,8 @@ function InnerLayout({ children }) {
   const [toast, setToast] = useState(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [cvUrl, setCvUrl] = useState("/assets/cv.pdf");
+  const [githubUrl, setGithubUrl] = useState("https://github.com/RashOps");
+  const [linkedinUrl, setLinkedinUrl] = useState("https://www.linkedin.com/in/rayhan-touboui-machine-learning-powerbi-nlp-data-science");
 
   // Close menu when pathname changes
   useEffect(() => {
@@ -23,17 +25,19 @@ function InnerLayout({ children }) {
 
   // Fetch CV URL
   useEffect(() => {
-    async function loadCV() {
+    async function loadProfileData() {
       try {
         const profile = await profileService.getProfile();
-        if (profile?.cv_url) {
-          setCvUrl(profile.cv_url);
+        if (profile) {
+          if (profile.cv_url) setCvUrl(profile.cv_url);
+          if (profile.github_url) setGithubUrl(profile.github_url);
+          if (profile.linkedin_url) setLinkedinUrl(profile.linkedin_url);
         }
       } catch (err) {
         console.error(err);
       }
     }
-    loadCV();
+    loadProfileData();
   }, []);
 
   const showToast = (message) => {
@@ -42,6 +46,7 @@ function InnerLayout({ children }) {
   };
 
   const navLinks = [
+    { name: "Accueil", path: "/", icon: "home" },
     { name: "Projets", path: "/mission-log", icon: "insights" },
     { name: "Stack", path: "/skill-tree", icon: "auto_awesome" },
     { name: "Parcours", path: "/timeline", icon: "work_history" },
@@ -142,9 +147,13 @@ function InnerLayout({ children }) {
           
           <div className="my-3 border-t border-white/5 mx-6"></div>
           
-          <a href="https://www.linkedin.com/in/rayhan-touboui-machine-learning-powerbi-nlp-data-science" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 text-on-surface-variant mx-3 px-4 py-2.5 rounded-lg hover:bg-white/5 hover:text-on-surface transition-all duration-200">
+          <a href={linkedinUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 text-on-surface-variant mx-3 px-4 py-2.5 rounded-lg hover:bg-white/5 hover:text-on-surface transition-all duration-200">
             <span className="material-symbols-outlined text-lg">hub</span>
             LinkedIn
+          </a>
+          <a href={githubUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 text-on-surface-variant mx-3 px-4 py-2.5 rounded-lg hover:bg-white/5 hover:text-on-surface transition-all duration-200">
+            <span className="material-symbols-outlined text-lg">code</span>
+            GitHub
           </a>
           <a href={cvUrl} download className="flex items-center gap-3 text-on-surface-variant mx-3 px-4 py-2.5 rounded-lg hover:bg-white/5 hover:text-on-surface transition-all duration-200">
             <span className="material-symbols-outlined text-lg">download</span>
@@ -209,9 +218,13 @@ function InnerLayout({ children }) {
                 
                 <div className="my-4 border-t border-white/5 mx-8"></div>
                 
-                <a href="https://www.linkedin.com/in/rayhan-seh-fred-touboui" target="_blank" rel="noopener noreferrer" className="flex items-center gap-4 text-on-surface-variant mx-4 px-5 py-3.5 rounded-lg">
+                <a href={linkedinUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-4 text-on-surface-variant mx-4 px-5 py-3.5 rounded-lg">
                   <span className="material-symbols-outlined text-xl">hub</span>
                   LinkedIn
+                </a>
+                <a href={githubUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-4 text-on-surface-variant mx-4 px-5 py-3.5 rounded-lg">
+                  <span className="material-symbols-outlined text-xl">code</span>
+                  GitHub
                 </a>
                 <a href={cvUrl} download className="flex items-center gap-4 text-on-surface-variant mx-4 px-5 py-3.5 rounded-lg">
                   <span className="material-symbols-outlined text-xl">download</span>
@@ -244,10 +257,10 @@ function InnerLayout({ children }) {
               </p>
             </div>
             <div className="flex items-center gap-6">
-              <a href="https://www.linkedin.com/in/rayhan-seh-fred-touboui" target="_blank" rel="noopener noreferrer" className="text-on-surface-variant hover:text-primary transition-colors">
+              <a href={linkedinUrl} target="_blank" rel="noopener noreferrer" className="text-on-surface-variant hover:text-primary transition-colors">
                 <span className="material-symbols-outlined">public</span>
               </a>
-              <a href="https://github.com/RashOps" target="_blank" rel="noopener noreferrer" className="text-on-surface-variant hover:text-primary transition-colors">
+              <a href={githubUrl} target="_blank" rel="noopener noreferrer" className="text-on-surface-variant hover:text-primary transition-colors">
                 <svg viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">
                   <path d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.87 1.52 2.34 1.07 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.92 0-1.11.38-2.02 1.03-2.71-.1-.25-.45-1.29.1-2.64 0 0 .84-.27 2.75 1.02.79-.22 1.65-.33 2.5-.33.85 0 1.71.11 2.5.33 1.91-1.29 2.75-1.02 2.75-1.02.55 1.35.2 2.39.1 2.64.65.69 1.03 1.6 1.03 2.71 0 3.82-2.34 4.66-4.57 4.91.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 2Z" />
                 </svg>
