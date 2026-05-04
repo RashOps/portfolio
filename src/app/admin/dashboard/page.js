@@ -59,7 +59,8 @@ export default function AdminDashboard() {
   const [isAddingExp, setIsAddingExp] = useState(false);
   const [editingExpId, setEditingExpId] = useState(null);
   const [expForm, setExpForm] = useState({
-    title: "", company: "", start_date: "", end_date: "", description: "", type: "Professionnel"
+    title: "", company: "", start_date: "", end_date: "", description: "", type: "Pro",
+    icon: "work", color_theme: "primary", tags_input: ""
   });
 
   // Form States (Tech Stack)
@@ -218,23 +219,40 @@ export default function AdminDashboard() {
   const handleAddExp = async (e) => {
     e.preventDefault();
     try {
+      // Process tags
+      const tagsArray = expForm.tags_input 
+        ? expForm.tags_input.split(',').map(t => t.trim()).filter(t => t !== "")
+        : [];
+        
+      const payload = {
+        title: expForm.title,
+        company: expForm.company,
+        start_date: expForm.start_date,
+        end_date: expForm.end_date,
+        description: expForm.description,
+        type: expForm.type,
+        icon: expForm.icon,
+        color_theme: expForm.color_theme,
+        tags: tagsArray
+      };
+
       if (editingExpId) {
-        await updateExperienceAction(editingExpId, expForm);
+        await updateExperienceAction(editingExpId, payload);
       } else {
-        await addExperienceAction(expForm);
+        await addExperienceAction(payload);
       }
       setIsAddingExp(false);
       setEditingExpId(null);
-      setExpForm({ title: "", company: "", start_date: "", end_date: "", description: "", type: "Professionnel" });
+      setExpForm({ title: "", company: "", start_date: "", end_date: "", description: "", type: "Pro", icon: "work", color_theme: "primary", tags_input: "" });
       fetchData();
     } catch (err) { alert("Erreur : " + err.message); }
   };
   const handleEditExp = (exp) => {
     setExpForm({
       ...exp,
-      end_date: exp.end_date || "",
-      description: exp.description || "",
-      company: exp.company || ""
+      tags_input: exp.tags ? exp.tags.join(', ') : "",
+      icon: exp.icon || "work",
+      color_theme: exp.color_theme || "primary"
     });
     setEditingExpId(exp.id);
     setIsAddingExp(true);
@@ -525,7 +543,7 @@ export default function AdminDashboard() {
                 <h2 className="text-xl font-headline font-bold">Parcours & Expériences</h2>
                 <button onClick={() => {
                   setEditingExpId(null);
-                  setExpForm({ title: "", company: "", start_date: "", end_date: "", description: "", type: "Professionnel" });
+                  setExpForm({ title: "", company: "", start_date: "", end_date: "", description: "", type: "Pro", icon: "work", color_theme: "primary", tags_input: "" });
                   setIsAddingExp(!isAddingExp);
                 }} className="bg-primary text-background px-4 py-2 rounded-lg text-xs font-bold uppercase">{isAddingExp ? "Annuler" : "+ Ajouter"}</button>
               </div>
@@ -539,11 +557,37 @@ export default function AdminDashboard() {
                       <input required type="text" placeholder="Date début (ex: Sept 2024)" className="bg-surface-container rounded-lg px-4 py-3 text-sm w-full" value={expForm.start_date} onChange={e => setExpForm({...expForm, start_date: e.target.value})} />
                       <input type="text" placeholder="Date fin (ex: Présent)" className="bg-surface-container rounded-lg px-4 py-3 text-sm w-full" value={expForm.end_date} onChange={e => setExpForm({...expForm, end_date: e.target.value})} />
                       <select className="bg-surface-container rounded-lg px-4 py-3 text-sm w-full" value={expForm.type} onChange={e => setExpForm({...expForm, type: e.target.value})}>
-                        <option value="Professionnel">Professionnel</option>
-                        <option value="Académique">Académique</option>
+                        <option value="Pro">Professionnel</option>
+                        <option value="Academique">Académique</option>
                       </select>
                     </div>
-                    <textarea required placeholder="Description..." className="bg-surface-container rounded-lg px-4 py-3 text-sm w-full h-24" value={expForm.description} onChange={e => setExpForm({...expForm, description: e.target.value})}></textarea>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <select className="bg-surface-container rounded-lg px-4 py-3 text-sm w-full" value={expForm.icon} onChange={e => setExpForm({...expForm, icon: e.target.value})}>
+                        <optgroup label="Général">
+                          <option value="work">Malette (Travail)</option>
+                          <option value="business_center">Business</option>
+                          <option value="school">Diplôme / École</option>
+                          <option value="rocket_launch">Fusée (Master/Pivot)</option>
+                        </optgroup>
+                        <optgroup label="Spécialités">
+                          <option value="auto_awesome">Magie (Transformation/IA)</option>
+                          <option value="campaign">Communication / Mégaphone</option>
+                          <option value="analytics">Analyse Data / Graph</option>
+                          <option value="settings_input_component">Data Engineering (Connecteurs)</option>
+                          <option value="inventory_2">Stocks / Supply Chain</option>
+                          <option value="code">Code / Dev</option>
+                          <option value="terminal">Terminal / DevOps</option>
+                        </optgroup>
+                      </select>
+                      <select className="bg-surface-container rounded-lg px-4 py-3 text-sm w-full" value={expForm.color_theme} onChange={e => setExpForm({...expForm, color_theme: e.target.value})}>
+                        <option value="primary">Primaire (Ambré)</option>
+                        <option value="secondary">Secondaire (Bleu Clair)</option>
+                        <option value="tertiary">Tertiaire (Mauve/Rose)</option>
+                        <option value="white">Neutre (Gris/Blanc)</option>
+                      </select>
+                    </div>
+                    <input type="text" placeholder="Tags (séparés par des virgules, ex: Data Science, Business)" className="bg-surface-container rounded-lg px-4 py-3 text-sm w-full" value={expForm.tags_input} onChange={e => setExpForm({...expForm, tags_input: e.target.value})} />
+                    <textarea placeholder="Description" className="bg-surface-container rounded-lg px-4 py-3 text-sm w-full h-24" value={expForm.description} onChange={e => setExpForm({...expForm, description: e.target.value})}></textarea>
                     <button type="submit" className="w-full bg-primary text-background font-bold py-3 rounded-lg">{editingExpId ? "Mettre à jour" : "Sauvegarder"}</button>
                   </form>
                 </div>

@@ -1,7 +1,57 @@
+"use client";
+
+import { useState, useEffect } from "react";
 import { FadeIn } from "@/components/ui/FadeIn";
 import { StaggerContainer, StaggerItem } from "@/components/ui/StaggerContainer";
+import { experienceService } from '@/lib/supabase-client';
 
 export default function Timeline() {
+  const [experiences, setExperiences] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    async function loadData() {
+      try {
+        const fetchedExp = await experienceService.getExperiences();
+        setExperiences(fetchedExp || []);
+      } catch (error) {
+        console.error("Erreur de chargement", error);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    loadData();
+  }, []);
+
+  const academic = experiences.filter(e => e.type === "Academique");
+  const pro = experiences.filter(e => e.type === "Pro");
+
+  if (isLoading) {
+    return <div className="min-h-screen flex items-center justify-center text-primary animate-pulse font-headline tracking-widest uppercase">Chargement du parcours...</div>;
+  }
+
+  // Helper for border colors
+  const getBorderColorClass = (color) => {
+    switch(color) {
+      case "primary": return "border-primary";
+      case "secondary": return "border-secondary";
+      case "tertiary": return "border-tertiary";
+      case "white": return "border-white/20";
+      default: return "border-white/10";
+    }
+  };
+
+  // Helper for text colors
+  const getTextColorClass = (color) => {
+    switch(color) {
+      case "primary": return "text-primary";
+      case "secondary": return "text-secondary";
+      case "tertiary": return "text-tertiary";
+      case "white": return "text-on-surface-variant";
+      default: return "text-on-surface-variant";
+    }
+  };
+
   return (
     <>
       <div className="px-6 py-10 md:p-10 relative">
@@ -42,63 +92,32 @@ export default function Timeline() {
             </div>
             
             <div className="space-y-12">
-              {/* Entry 1 - Master IA */}
-              <FadeIn delay={0.1} direction="right" className="relative">
-                <div className="absolute -left-10 top-1">
-                  <div className="w-8 h-8 bg-surface rounded-full border-2 border-primary flex items-center justify-center">
-                    <span className="material-symbols-outlined text-primary text-sm animate-pulse">rocket_launch</span>
+              {academic.map((exp, index) => (
+                <FadeIn key={exp.id} delay={0.1 * (index + 1)} direction="right" className="relative">
+                  <div className="absolute -left-10 top-1">
+                    <div className={`w-8 h-8 bg-surface rounded-full border-2 ${getBorderColorClass(exp.color_theme)} flex items-center justify-center`}>
+                      <span className={`material-symbols-outlined ${getTextColorClass(exp.color_theme)} text-sm ${index === 0 ? "animate-pulse" : ""}`}>{exp.icon || "school"}</span>
+                    </div>
                   </div>
-                </div>
-                <div className="glass rounded-2xl p-6 card-hover">
-                  <div className="font-body text-xs text-secondary mb-2">2026 — 2028 (Admis)</div>
-                  <h4 className="font-headline text-lg text-on-surface mb-1 font-bold">Master Data Intelligence Artificielle</h4>
-                  <div className="text-sm font-body text-on-surface-variant mb-3">PSTB / Efrei (Prévu)</div>
-                  <div className="flex gap-2 flex-wrap">
-                    <span className="px-2 py-1 glass rounded-lg text-xs text-primary">Master Spécialisé</span>
-                    <span className="px-2 py-1 glass rounded-lg text-xs text-primary">IA Architecture</span>
+                  <div className={`glass rounded-2xl p-6 ${exp.color_theme === "primary" && index === 1 ? "border border-primary/20 bg-primary/5" : "card-hover"} ${exp.color_theme === "white" ? "opacity-80 border-l border-white/5" : ""}`}>
+                    <div className={`font-body text-xs ${getTextColorClass(exp.color_theme)} mb-2`}>{exp.start_date}</div>
+                    <h4 className={`font-headline text-lg text-on-surface mb-1 font-bold ${exp.color_theme === "primary" && index === 1 ? "italic" : ""}`}>{exp.title}</h4>
+                    <div className={`text-sm font-body text-on-surface-variant mb-3`}>{exp.company}</div>
+                    {exp.description && (
+                      <p className={`text-[11px] font-body mb-3 leading-relaxed ${exp.color_theme === "white" ? "text-on-surface-variant/60" : "text-on-surface-variant"}`}>
+                        {exp.description}
+                      </p>
+                    )}
+                    {exp.tags && exp.tags.length > 0 && (
+                      <div className="flex gap-2 flex-wrap mt-3">
+                        {exp.tags.map((tag, tIdx) => (
+                          <span key={tIdx} className={`px-2 py-1 glass rounded-lg text-xs ${tIdx % 2 === 0 ? "text-primary" : "text-secondary"}`}>{tag}</span>
+                        ))}
+                      </div>
+                    )}
                   </div>
-                </div>
-              </FadeIn>
-
-              {/* Entry 2 - Bachelor Double Diplôme (Pivotal Year) */}
-              <FadeIn delay={0.2} direction="right" className="relative">
-                <div className="absolute -left-10 top-1">
-                  <div className="w-8 h-8 bg-surface rounded-full border-2 border-primary/60 flex items-center justify-center">
-                    <span className="material-symbols-outlined text-primary text-sm">auto_awesome</span>
-                  </div>
-                </div>
-                <div className="glass rounded-2xl p-6 card-hover border border-primary/20 bg-primary/5">
-                  <div className="font-body text-xs text-secondary mb-2">Septembre 2025 — 2026</div>
-                  <h4 className="font-headline text-lg text-on-surface mb-1 font-bold italic">Double Diplôme & Pivot IA</h4>
-                  <div className="text-sm font-body text-on-surface-variant mb-3">
-                    Bachelor IA & Data (PSTB) + Bachelor Business (Excelia)
-                  </div>
-                  <p className="text-[11px] text-on-surface-variant font-body mb-3 leading-relaxed">
-                    Année de transformation : Immersion intensive en programmation, outils ML et architectures data suite à un cursus business.
-                  </p>
-                  <div className="flex gap-2 flex-wrap">
-                    <span className="px-2 py-1 glass rounded-lg text-xs text-primary">Data Science</span>
-                    <span className="px-2 py-1 glass rounded-lg text-xs text-secondary">Business Bridge</span>
-                  </div>
-                </div>
-              </FadeIn>
-
-              {/* Entry 3 - Excelia Foundation */}
-              <FadeIn delay={0.3} direction="right" className="relative">
-                <div className="absolute -left-10 top-1">
-                  <div className="w-8 h-8 bg-surface rounded-full border-2 border-white/10 flex items-center justify-center">
-                    <span className="material-symbols-outlined text-on-surface-variant text-sm">business_center</span>
-                  </div>
-                </div>
-                <div className="glass rounded-2xl p-6 opacity-80 border-l border-white/5">
-                  <div className="font-body text-xs text-on-surface-variant mb-2">2023 — 2025</div>
-                  <h4 className="font-headline text-lg text-on-surface mb-1 font-bold">Bachelor Business Administration</h4>
-                  <div className="text-sm font-body text-on-surface-variant mb-2">Excelia Business School — La Rochelle</div>
-                  <p className="text-[11px] text-on-surface-variant/60 font-body">
-                    Focus : Strategie, Marketing & Analyse ROI. Développement d'une vision métier solide indispensable à l'IA appliquée.
-                  </p>
-                </div>
-              </FadeIn>
+                </FadeIn>
+              ))}
             </div>
           </div>
 
@@ -114,73 +133,32 @@ export default function Timeline() {
             </div>
             
             <div className="space-y-12">
-              {/* AESIO */}
-              <FadeIn delay={0.1} direction="left" className="relative">
-                <div className="absolute -left-10 top-1">
-                  <div className="w-8 h-8 bg-surface rounded-full border-2 border-primary flex items-center justify-center">
-                    <span className="material-symbols-outlined text-primary text-sm">campaign</span>
+              {pro.map((exp, index) => (
+                <FadeIn key={exp.id} delay={0.1 * (index + 1)} direction="left" className="relative">
+                  <div className="absolute -left-10 top-1">
+                    <div className={`w-8 h-8 bg-surface rounded-full border-2 ${getBorderColorClass(exp.color_theme)} flex items-center justify-center`}>
+                      <span className={`material-symbols-outlined ${getTextColorClass(exp.color_theme)} text-sm`}>{exp.icon || "work"}</span>
+                    </div>
                   </div>
-                </div>
-                <div className="glass rounded-2xl p-6 card-hover">
-                  <div className="font-body text-xs text-primary mb-2">Février 2026 — Aujourd'hui</div>
-                  <h4 className="font-headline text-lg text-on-surface mb-1 font-bold">Responsable Communication & Digital</h4>
-                  <div className="text-sm font-body text-on-surface-variant font-medium">AESIO (Association étudiante)</div>
-                  <p className="text-on-surface-variant text-xs mt-3 leading-relaxed font-body">
-                    Leadership & Gouvernance numérique. Standardisation des processus de production et Knowledge Management via Google Cloud Drive.
-                  </p>
-                </div>
-              </FadeIn>
-
-              {/* BDE PSTB */}
-              <FadeIn delay={0.2} direction="left" className="relative">
-                <div className="absolute -left-10 top-1">
-                  <div className="w-8 h-8 bg-surface rounded-full border-2 border-secondary flex items-center justify-center">
-                    <span className="material-symbols-outlined text-secondary text-sm">analytics</span>
+                  <div className="glass rounded-2xl p-6 card-hover">
+                    <div className={`font-body text-xs ${getTextColorClass(exp.color_theme)} mb-2`}>{exp.start_date}</div>
+                    <h4 className="font-headline text-lg text-on-surface mb-1 font-bold">{exp.title}</h4>
+                    <div className="text-sm font-body text-on-surface-variant font-medium">{exp.company}</div>
+                    {exp.description && (
+                      <p className="text-on-surface-variant text-xs mt-3 leading-relaxed font-body">
+                        {exp.description}
+                      </p>
+                    )}
+                    {exp.tags && exp.tags.length > 0 && (
+                      <div className="flex gap-2 flex-wrap mt-3">
+                        {exp.tags.map((tag, tIdx) => (
+                          <span key={tIdx} className={`px-2 py-1 glass rounded-lg text-xs ${tIdx % 2 === 0 ? "text-primary" : "text-secondary"}`}>{tag}</span>
+                        ))}
+                      </div>
+                    )}
                   </div>
-                </div>
-                <div className="glass rounded-2xl p-6 card-hover">
-                  <div className="font-body text-xs text-secondary mb-2">Septembre 2025 — Aujourd'hui</div>
-                  <h4 className="font-headline text-lg text-on-surface mb-1 font-bold">Chargé de Communication & Analyse Data</h4>
-                  <div className="text-sm font-body text-on-surface-variant font-medium">BDE PSTB — Paris</div>
-                  <p className="text-on-surface-variant text-xs mt-3 leading-relaxed font-body">
-                    Analyse de l'engagement Social Media et segmentation des canaux de diffusion. Gestion de projet événementiel (20+ événements).
-                  </p>
-                </div>
-              </FadeIn>
-
-              {/* Orange CI */}
-              <FadeIn delay={0.3} direction="left" className="relative">
-                <div className="absolute -left-10 top-1">
-                  <div className="w-8 h-8 bg-surface rounded-full border-2 border-tertiary flex items-center justify-center">
-                    <span className="material-symbols-outlined text-tertiary text-sm">settings_input_component</span>
-                  </div>
-                </div>
-                <div className="glass rounded-2xl p-6 card-hover">
-                  <div className="font-body text-xs text-tertiary mb-2">Mai 2025 — Août 2025</div>
-                  <h4 className="font-headline text-lg text-on-surface mb-1 font-bold">Stage Assistant Ingénieur Data</h4>
-                  <div className="text-sm font-body text-on-surface-variant font-medium">Orange Côte d'Ivoire — Abidjan</div>
-                  <p className="text-on-surface-variant text-xs mt-3 leading-relaxed font-body">
-                    Déploiement de workflows automatisés (DataOps) avec n8n pour la surveillance temps réel de bases PostgreSQL.
-                  </p>
-                </div>
-              </FadeIn>
-
-              {/* Emmaüs */}
-              <FadeIn delay={0.4} direction="left" className="relative">
-                <div className="absolute -left-10 top-1">
-                  <div className="w-8 h-8 bg-surface rounded-full border-2 border-white/20 flex items-center justify-center">
-                    <span className="material-symbols-outlined text-on-surface-variant text-sm">inventory_2</span>
-                  </div>
-                </div>
-                <div className="glass rounded-2xl p-6 card-hover">
-                  <div className="font-body text-xs text-on-surface-variant mb-2">Janvier 2025 — Avril 2025</div>
-                  <h4 className="font-headline text-lg text-on-surface mb-1 font-bold">Stage Analyste des Stocks</h4>
-                  <div className="text-sm font-body text-on-surface-variant font-medium">Emmaüs Krefeld — Allemagne</div>
-                  <p className="text-on-surface-variant text-xs mt-3 leading-relaxed font-body">
-                    Supply Chain & Merchandising Data-Driven. Analyse des flux et clustering des comportements clients.
-                  </p>
-                </div>
-              </FadeIn>
+                </FadeIn>
+              ))}
             </div>
           </div>
         </div>
@@ -203,7 +181,7 @@ export default function Timeline() {
               <span className="font-body text-sm text-on-surface-variant">Expérience Pro</span>
               <span className="material-symbols-outlined text-secondary text-lg">work_history</span>
             </div>
-            <div className="text-xl md:text-2xl font-headline font-bold text-secondary">4 Missions</div>
+            <div className="text-xl md:text-2xl font-headline font-bold text-secondary">{pro.length} Missions</div>
             <div className="text-xs font-body text-on-surface-variant mt-2">Data, Comm & Supply Chain</div>
           </StaggerItem>
           

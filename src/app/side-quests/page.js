@@ -62,66 +62,73 @@ export default function SideQuests() {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 relative z-10">
-            {explorations.map((exp) => (
-              <div key={exp.id} className="glass rounded-2xl group card-hover flex flex-col relative overflow-hidden">
-                <div className="absolute top-4 right-4 z-20">
-                  <span className="text-xs font-body text-secondary bg-secondary/10 px-2.5 py-1 rounded-full font-medium shadow-sm backdrop-blur-md border border-secondary/20">
-                    {exp.status}
-                  </span>
-                </div>
-                
-                {/* Image Cover Optionnelle */}
-                {exp.image_url ? (
-                  <div className="h-40 w-full relative border-b border-white/5">
-                    <Image 
-                      src={exp.image_url} 
-                      alt={exp.title} 
-                      fill 
-                      className="object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700" 
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent"></div>
+            {explorations.map((exp) => {
+              const isLocked = exp.status === "Bientôt";
+              
+              if (isLocked) {
+                return (
+                  <div key={exp.id} className="glass rounded-2xl flex flex-col relative opacity-30 grayscale pointer-events-none">
+                    <div className="absolute top-4 right-4 z-20">
+                      <span className="text-xs font-body text-on-surface-variant bg-white/5 px-2.5 py-1 rounded-full">{exp.status}</span>
+                    </div>
+                    <div className="p-8">
+                      <div className="mb-6">
+                        <span className="material-symbols-outlined text-on-surface-variant text-4xl mb-4" style={{ fontVariationSettings: "'FILL' 1" }}>lock</span>
+                        <h3 className="text-xl font-headline font-bold text-on-surface-variant">{exp.title}</h3>
+                      </div>
+                      <p className="text-sm text-on-surface-variant/60 font-body mb-8">
+                        {exp.description}
+                      </p>
+                    </div>
                   </div>
-                ) : (
-                  <div className="h-20 w-full bg-surface-container/50 border-b border-white/5 flex items-center px-8">
-                     <span className="material-symbols-outlined text-primary text-4xl opacity-70 group-hover:opacity-100 transition-opacity" style={{ fontVariationSettings: "'FILL' 1" }}>
-                       explore
-                     </span>
-                  </div>
-                )}
+                );
+              }
 
-                <div className="p-8 flex-grow flex flex-col">
-                  <div className="mb-4">
-                    <h3 className="text-xl font-headline font-bold text-on-surface group-hover:text-primary transition-colors">{exp.title}</h3>
+              return (
+                <div key={exp.id} className="glass rounded-2xl group card-hover flex flex-col relative overflow-hidden">
+                  <div className="absolute top-4 right-4 z-20">
+                    <span className={`text-xs font-body px-2.5 py-1 rounded-full font-medium shadow-sm backdrop-blur-md border ${exp.status === "Terminé" ? "text-green-400 bg-green-400/10 border-green-400/20" : "text-secondary bg-secondary/10 border-secondary/20"}`}>
+                      {exp.status}
+                    </span>
                   </div>
-                  <p className="text-sm text-on-surface-variant font-body mb-8 leading-relaxed flex-grow">
-                    {exp.description}
-                  </p>
                   
-                  {exp.url && (
-                    <a href={exp.url} target="_blank" rel="noopener noreferrer" className="w-full text-center py-3 glass hover:bg-white/10 rounded-xl text-sm font-body text-white font-bold tracking-wide transition-colors flex justify-center items-center gap-2">
-                      <span className="material-symbols-outlined text-sm">link</span> Découvrir
-                    </a>
+                  {/* Image Cover Optionnelle */}
+                  {exp.image_url ? (
+                    <div className="h-40 w-full relative border-b border-white/5">
+                      <Image 
+                        src={exp.image_url} 
+                        alt={exp.title} 
+                        fill 
+                        className="object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700" 
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent"></div>
+                    </div>
+                  ) : (
+                    <div className="h-20 w-full bg-surface-container/50 border-b border-white/5 flex items-center px-8">
+                       <span className="material-symbols-outlined text-primary text-4xl opacity-70 group-hover:opacity-100 transition-opacity" style={{ fontVariationSettings: "'FILL' 1" }}>
+                         explore
+                       </span>
+                    </div>
                   )}
-                </div>
-                <div className="h-0.5 w-0 group-hover:w-full bg-gradient-to-r from-primary to-tertiary transition-all duration-700 absolute bottom-0 rounded-full"></div>
-              </div>
-            ))}
 
-            {/* Locked Card (Placeholder for UI consistency) */}
-            <div className="glass rounded-2xl flex flex-col relative opacity-30 grayscale pointer-events-none">
-              <div className="absolute top-4 right-4">
-                <span className="text-xs font-body text-on-surface-variant bg-white/5 px-2.5 py-1 rounded-full">Bientôt</span>
-              </div>
-              <div className="p-8">
-                <div className="mb-6">
-                  <span className="material-symbols-outlined text-on-surface-variant text-4xl mb-4" style={{ fontVariationSettings: "'FILL' 1" }}>lock</span>
-                  <h3 className="text-xl font-headline font-bold text-on-surface-variant">MLOps Pipeline</h3>
+                  <div className="p-8 flex-grow flex flex-col">
+                    <div className="mb-4">
+                      <h3 className="text-xl font-headline font-bold text-on-surface group-hover:text-primary transition-colors">{exp.title}</h3>
+                    </div>
+                    <p className="text-sm text-on-surface-variant font-body mb-8 leading-relaxed flex-grow">
+                      {exp.description}
+                    </p>
+                    
+                    {exp.url && (
+                      <a href={exp.url} target="_blank" rel="noopener noreferrer" className="w-full text-center py-3 glass hover:bg-white/10 rounded-xl text-sm font-body text-white font-bold tracking-wide transition-colors flex justify-center items-center gap-2">
+                        <span className="material-symbols-outlined text-sm">link</span> Découvrir
+                      </a>
+                    )}
+                  </div>
+                  <div className="h-0.5 w-0 group-hover:w-full bg-gradient-to-r from-primary to-tertiary transition-all duration-700 absolute bottom-0 rounded-full"></div>
                 </div>
-                <p className="text-sm text-on-surface-variant/60 font-body mb-8">
-                  Mise en production de modèles ML avec monitoring et versioning automatisé.
-                </p>
-              </div>
-            </div>
+              );
+            })}
           </div>
         )}
       </div>
