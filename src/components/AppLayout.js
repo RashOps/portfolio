@@ -7,17 +7,34 @@ import { motion, AnimatePresence } from "framer-motion";
 import { BotProvider, useBot } from "./bot/BotProvider";
 import FloatingWidget from "./bot/FloatingWidget";
 import SlideUpConsole from "./bot/SlideUpConsole";
+import { profileService } from "@/lib/supabase-client";
 
 function InnerLayout({ children }) {
   const pathname = usePathname();
   const { toggleConsole } = useBot();
   const [toast, setToast] = useState(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [cvUrl, setCvUrl] = useState("/assets/cv.pdf");
 
   // Close menu when pathname changes
   useEffect(() => {
     setIsMenuOpen(false);
   }, [pathname]);
+
+  // Fetch CV URL
+  useEffect(() => {
+    async function loadCV() {
+      try {
+        const profile = await profileService.getProfile();
+        if (profile?.cv_url) {
+          setCvUrl(profile.cv_url);
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    }
+    loadCV();
+  }, []);
 
   const showToast = (message) => {
     setToast(message);
@@ -129,7 +146,7 @@ function InnerLayout({ children }) {
             <span className="material-symbols-outlined text-lg">hub</span>
             LinkedIn
           </a>
-          <a href="/assets/cv.pdf" download className="flex items-center gap-3 text-on-surface-variant mx-3 px-4 py-2.5 rounded-lg hover:bg-white/5 hover:text-on-surface transition-all duration-200">
+          <a href={cvUrl} download className="flex items-center gap-3 text-on-surface-variant mx-3 px-4 py-2.5 rounded-lg hover:bg-white/5 hover:text-on-surface transition-all duration-200">
             <span className="material-symbols-outlined text-lg">download</span>
             Télécharger CV
           </a>
@@ -195,6 +212,10 @@ function InnerLayout({ children }) {
                 <a href="https://www.linkedin.com/in/rayhan-seh-fred-touboui" target="_blank" rel="noopener noreferrer" className="flex items-center gap-4 text-on-surface-variant mx-4 px-5 py-3.5 rounded-lg">
                   <span className="material-symbols-outlined text-xl">hub</span>
                   LinkedIn
+                </a>
+                <a href={cvUrl} download className="flex items-center gap-4 text-on-surface-variant mx-4 px-5 py-3.5 rounded-lg">
+                  <span className="material-symbols-outlined text-xl">download</span>
+                  Télécharger CV
                 </a>
               </nav>
 

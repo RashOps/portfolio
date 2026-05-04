@@ -3,7 +3,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useEffect } from "react";
 
-export default function CVModal({ isOpen, onClose }) {
+export default function CVModal({ isOpen, onClose, cvUrl = "/assets/cv.pdf" }) {
   // Prevent scrolling when modal is open
   useEffect(() => {
     if (isOpen) {
@@ -51,7 +51,7 @@ export default function CVModal({ isOpen, onClose }) {
               
               <div className="flex items-center gap-3">
                 <a 
-                  href="/assets/cv.pdf" 
+                  href={cvUrl} 
                   download 
                   className="hidden sm:flex items-center gap-2 px-4 py-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 transition-colors text-xs font-bold uppercase tracking-wider"
                 >
@@ -70,7 +70,7 @@ export default function CVModal({ isOpen, onClose }) {
             {/* Content (PDF) */}
             <div className="flex-grow bg-[#525659]">
               <iframe 
-                src="/assets/cv.pdf#toolbar=0&view=FitH" 
+                src={`${cvUrl}#toolbar=0&view=FitH`} 
                 className="w-full h-full border-none"
                 title="Visualisation du CV"
               />
@@ -79,7 +79,7 @@ export default function CVModal({ isOpen, onClose }) {
             {/* Mobile Download Bar */}
             <div className="sm:hidden p-4 border-t border-white/10 bg-surface-container/50">
               <a 
-                href="/assets/cv.pdf" 
+                href={cvUrl} 
                 download 
                 className="flex items-center justify-center gap-2 w-full py-3 rounded-xl bg-primary text-white text-xs font-bold uppercase tracking-wider shadow-lg shadow-primary/20"
               >
