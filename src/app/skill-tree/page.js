@@ -1,13 +1,65 @@
+"use client";
+
+import { useState, useEffect } from 'react';
 import { FadeIn } from "@/components/ui/FadeIn";
 import { StaggerContainer, StaggerItem } from "@/components/ui/StaggerContainer";
+import { skillService, techStackService, profileService } from '@/lib/supabase-client';
 
 export default function SkillTree() {
-  const versatilityIndex = 86;
+  const [skills, setSkills] = useState([]);
+  const [techStack, setTechStack] = useState([]);
+  const [profile, setProfile] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    async function loadData() {
+      try {
+        const [fetchedSkills, fetchedTech, fetchedProfile] = await Promise.all([
+          skillService.getSkills(),
+          techStackService.getTechStack(),
+          profileService.getProfile()
+        ]);
+        setSkills(fetchedSkills || []);
+        setTechStack(fetchedTech || []);
+        setProfile(fetchedProfile || null);
+      } catch (error) {
+        console.error("Erreur de chargement", error);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    loadData();
+  }, []);
+
+  // --- Filtering Data ---
+  const validSkills = skills.filter(s => s.display_location !== "profile");
+  
+  const dataScienceSkills = validSkills.filter(s => s.category === "Science");
+  const languagesSkills = validSkills.filter(s => s.category === "Languages" || s.category === "Engineering");
+  const devopsTech = techStack.filter(t => t.category === "Frameworks" || t.name.toLowerCase().includes("docker") || t.name.toLowerCase().includes("git") || t.name.toLowerCase().includes("n8n"));
+  const datavizTech = techStack.filter(t => t.category === "Dataviz & BI" || t.category === "Databases & Tools");
+
+  const radarTech = techStack.filter(t => t.show_in_radar !== false);
+
+  // --- Versatility Index Calculation ---
+  let versatilityIndex = 86;
+  if (profile) {
+    if (profile.versatility_dynamic !== false && validSkills.length > 0) {
+      versatilityIndex = Math.round(validSkills.reduce((acc, curr) => acc + curr.percentage, 0) / validSkills.length);
+    } else if (profile.versatility_manual) {
+      versatilityIndex = profile.versatility_manual;
+    }
+  }
+
   const bars = Array.from({ length: 10 }, (_, i) => i < Math.round(versatilityIndex / 10));
+
+  if (isLoading) {
+    return <div className="min-h-screen flex items-center justify-center text-primary animate-pulse font-headline tracking-widest uppercase">Chargement de l'arsenal technique...</div>;
+  }
 
   return (
     <>
-      <div className="p-8 pb-16 lg:px-12 max-w-[1400px]">
+      <div className="p-8 pb-16 lg:px-12 max-w-[1400px] mx-auto">
         {/* Header Section */}
         <FadeIn direction="down" className="mb-10 md:mb-16">
           <h1 className="font-headline text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-on-surface mb-2">
@@ -30,41 +82,34 @@ export default function SkillTree() {
               <span className="material-symbols-outlined text-primary">neurology</span>
               Data Science &amp; IA
             </h2>
-            <div className="space-y-8">
-              <FadeIn delay={0.2} direction="left">
-                <div className="flex justify-between items-end mb-3">
-                  <span className="font-body text-sm text-on-surface">NLP &amp; Traitement du langage (BERT, FastText, Sentiment Analysis)</span>
-                  <span className="font-headline text-sm text-primary font-medium">Intermédiaire +</span>
-                </div>
-                <div className="h-2 bg-white/5 rounded-full overflow-hidden">
-                  <div className="bg-gradient-to-r from-primary to-primary-dim h-full rounded-full transition-all duration-1000 ease-out" style={{ width: "78%" }}></div>
-                </div>
-              </FadeIn>
-              <FadeIn delay={0.3} direction="left">
-                <div className="flex justify-between items-end mb-3">
-                  <span className="font-body text-sm text-on-surface">Machine Learning (Clustering K-Means, Scikit-Learn)</span>
-                  <span className="font-headline text-sm text-on-surface-variant font-medium">Avancé</span>
-                </div>
-                <div className="h-2 bg-white/5 rounded-full overflow-hidden">
-                  <div className="bg-gradient-to-r from-primary/80 to-primary-dim/80 h-full rounded-full transition-all duration-1000 ease-out" style={{ width: "78%" }}></div>
-                </div>
-              </FadeIn>
-              <FadeIn delay={0.4} direction="left">
-                <div className="flex justify-between items-end mb-3">
-                  <span className="font-body text-sm text-on-surface">Data Cleaning &amp; Statistiques descriptives (Pandas, NumPy)</span>
-                  <span className="font-headline text-sm text-on-surface-variant font-medium">Avancé</span>
-                </div>
-                <div className="h-2 bg-white/5 rounded-full overflow-hidden">
-                  <div className="bg-gradient-to-r from-primary/60 to-primary-dim/60 h-full rounded-full transition-all duration-1000 ease-out" style={{ width: "81%" }}></div>
-                </div>
-              </FadeIn>
+            <div className="space-y-8 relative z-10">
+              {dataScienceSkills.length > 0 ? dataScienceSkills.map((skill, index) => {
+                 let opacity = 100 - (index * 20);
+                 if (opacity < 40) opacity = 40;
+                 return (
+                  <FadeIn key={skill.id} delay={0.2 + (index * 0.1)} direction="left">
+                    <div className="flex justify-between items-end mb-3">
+                      <span className="font-body text-sm text-on-surface">{skill.name}</span>
+                      <span className="font-headline text-sm text-primary font-medium">{skill.percentage}%</span>
+                    </div>
+                    <div className="h-2 bg-white/5 rounded-full overflow-hidden">
+                      <div className={`bg-gradient-to-r from-primary to-primary-dim h-full rounded-full transition-all duration-1000 ease-out`} style={{ width: `${skill.percentage}%`, opacity: opacity / 100 }}></div>
+                    </div>
+                  </FadeIn>
+                )
+              }) : (
+                <p className="text-sm text-on-surface-variant font-body">Aucune compétence Science ajoutée.</p>
+              )}
             </div>
           </StaggerItem>
 
           {/* Side Stats Panel */}
           <div className="lg:col-span-4 space-y-8">
             <StaggerItem className="glass rounded-2xl p-6">
-              <h3 className="font-headline text-sm text-secondary mb-4 font-medium">Indice de polyvalence</h3>
+              <div className="flex justify-between items-start mb-4">
+                <h3 className="font-headline text-sm text-secondary font-medium">Indice de polyvalence</h3>
+                {profile?.versatility_dynamic !== false && <span className="material-symbols-outlined text-xs text-primary animate-pulse" title="Calculé dynamiquement">auto_awesome</span>}
+              </div>
               <div className="flex items-end gap-2 mb-3">
                 <span className="text-4xl font-headline font-bold gradient-text">{versatilityIndex}</span>
                 <span className="text-sm font-body text-on-surface-variant mb-1">/ 100</span>
@@ -87,18 +132,17 @@ export default function SkillTree() {
                 Dev &amp; Ops
               </h2>
               <div className="space-y-4">
-                <div className="flex justify-between items-center text-sm font-body">
-                  <span className="text-on-surface-variant">Docker / Gunicorn</span>
-                  <span className="text-primary font-medium">Opérationnel</span>
-                </div>
-                <div className="flex justify-between items-center text-sm font-body">
-                  <span className="text-on-surface-variant">Git / GitHub</span>
-                  <span className="text-primary font-medium">Courant</span>
-                </div>
-                <div className="flex justify-between items-center text-sm font-body">
-                  <span className="text-on-surface-variant">n8n / Automatisation</span>
-                  <span className="text-primary font-medium">Avancé</span>
-                </div>
+                {devopsTech.length > 0 ? devopsTech.map(tech => (
+                  <div key={tech.id} className="flex justify-between items-center text-sm font-body">
+                    <span className="text-on-surface-variant flex items-center gap-2">
+                      {tech.icon_url && <img src={tech.icon_url} className="w-4 h-4 object-contain" alt={tech.name}/>}
+                      {tech.name}
+                    </span>
+                    <span className="text-primary font-medium text-[10px] uppercase tracking-wider bg-primary/10 px-2 py-0.5 rounded">Opérationnel</span>
+                  </div>
+                )) : (
+                  <p className="text-xs text-on-surface-variant">Aucun outil Dev & Ops renseigné.</p>
+                )}
               </div>
             </StaggerItem>
           </div>
@@ -153,7 +197,7 @@ export default function SkillTree() {
         </section>
 
         {/* Dataviz & Languages */}
-        <StaggerContainer className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+        <StaggerContainer className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-20">
           {/* Business Intelligence & Dataviz */}
           <StaggerItem>
             <h2 className="font-headline text-xl font-bold mb-8 flex items-center gap-3">
@@ -161,44 +205,26 @@ export default function SkillTree() {
               Business Intelligence & Dataviz
             </h2>
             <div className="space-y-4">
-              <div className="glass rounded-xl p-5 flex items-center justify-between group card-hover">
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 glass rounded-xl flex items-center justify-center">
-                    <span className="material-symbols-outlined text-primary group-hover:scale-110 transition-transform">dashboard</span>
+              {datavizTech.length > 0 ? datavizTech.map((tech) => (
+                <div key={tech.id} className="glass rounded-xl p-5 flex items-center justify-between group card-hover">
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 glass rounded-xl flex items-center justify-center p-2">
+                      {tech.icon_url ? (
+                        <img src={tech.icon_url} alt={tech.name} className="w-full h-full object-contain group-hover:scale-110 transition-transform" />
+                      ) : (
+                        <span className="material-symbols-outlined text-primary group-hover:scale-110 transition-transform">dashboard</span>
+                      )}
+                    </div>
+                    <div>
+                      <h4 className="font-headline font-bold text-sm">{tech.name}</h4>
+                      <p className="text-xs font-body text-on-surface-variant">{tech.category}</p>
+                    </div>
                   </div>
-                  <div>
-                    <h4 className="font-headline font-bold text-sm">Streamlit / Dash / Plotly</h4>
-                    <p className="text-xs font-body text-on-surface-variant">Applications Data interactives</p>
-                  </div>
+                  <span className="material-symbols-outlined text-green-400/50">check_circle</span>
                 </div>
-                <span className="material-symbols-outlined text-green-400/50">check_circle</span>
-              </div>
-              
-              <div className="glass rounded-xl p-5 flex items-center justify-between group card-hover">
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 glass rounded-xl flex items-center justify-center">
-                    <span className="material-symbols-outlined text-primary group-hover:scale-110 transition-transform">bar_chart</span>
-                  </div>
-                  <div>
-                    <h4 className="font-headline font-bold text-sm">Power BI</h4>
-                    <p className="text-xs font-body text-on-surface-variant">Reporting Business & Analyse</p>
-                  </div>
-                </div>
-                <span className="material-symbols-outlined text-green-400/50">check_circle</span>
-              </div>
-              
-              <div className="glass rounded-xl p-5 flex items-center justify-between group card-hover">
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 glass rounded-xl flex items-center justify-center">
-                    <span className="material-symbols-outlined text-primary group-hover:scale-110 transition-transform">draw</span>
-                  </div>
-                  <div>
-                    <h4 className="font-headline font-bold text-sm">Figma / PlantUML</h4>
-                    <p className="text-xs font-body text-on-surface-variant">Design UI & Modélisation Système</p>
-                  </div>
-                </div>
-                <span className="material-symbols-outlined text-green-400/50">check_circle</span>
-              </div>
+              )) : (
+                <p className="text-sm text-on-surface-variant font-body">Aucun outil Dataviz ajouté.</p>
+              )}
             </div>
           </StaggerItem>
 
@@ -210,39 +236,57 @@ export default function SkillTree() {
             </h2>
             <div className="glass rounded-2xl p-8">
               <div className="space-y-8">
-                <FadeIn delay={0.1} direction="up">
-                  <div className="flex justify-between items-center mb-3">
-                    <span className="font-headline text-sm">Python</span>
-                    <span className="text-xs text-primary font-medium">Avancé (Analyse & Scripting)</span>
-                  </div>
-                  <div className="h-3 bg-white/5 rounded-full overflow-hidden">
-                    <div className="h-full bg-gradient-to-r from-primary to-tertiary rounded-full transition-all duration-1000" style={{ width: "85%" }}></div>
-                  </div>
-                </FadeIn>
-                
-                <FadeIn delay={0.2} direction="up">
-                  <div className="flex justify-between items-center mb-3">
-                    <span className="font-headline text-sm">SQL (PostgreSQL, MySQL)</span>
-                    <span className="text-xs text-secondary font-medium">Avancé</span>
-                  </div>
-                  <div className="h-3 bg-white/5 rounded-full overflow-hidden">
-                    <div className="h-full bg-gradient-to-r from-secondary to-secondary-dim rounded-full transition-all duration-1000" style={{ width: "82%" }}></div>
-                  </div>
-                </FadeIn>
-                
-                <FadeIn delay={0.3} direction="up">
-                  <div className="flex justify-between items-center mb-3">
-                    <span className="font-headline text-sm">Anglais</span>
-                    <span className="text-xs text-on-surface-variant font-medium">Courant (Professionnel)</span>
-                  </div>
-                  <div className="h-3 bg-white/5 rounded-full overflow-hidden">
-                    <div className="h-full bg-gradient-to-r from-tertiary to-tertiary-dim rounded-full transition-all duration-1000" style={{ width: "80%" }}></div>
-                  </div>
-                </FadeIn>
+                {languagesSkills.length > 0 ? languagesSkills.map((skill, index) => (
+                  <FadeIn key={skill.id} delay={0.1 * (index + 1)} direction="up">
+                    <div className="flex justify-between items-center mb-3">
+                      <span className="font-headline text-sm">{skill.name}</span>
+                      <span className="text-xs text-primary font-medium">{skill.percentage}%</span>
+                    </div>
+                    <div className="h-3 bg-white/5 rounded-full overflow-hidden">
+                      <div className={`h-full rounded-full transition-all duration-1000 ${index % 2 === 0 ? 'bg-gradient-to-r from-primary to-tertiary' : 'bg-gradient-to-r from-secondary to-secondary-dim'}`} style={{ width: `${skill.percentage}%` }}></div>
+                    </div>
+                  </FadeIn>
+                )) : (
+                  <p className="text-sm text-on-surface-variant font-body">Aucun langage ajouté.</p>
+                )}
               </div>
             </div>
           </StaggerItem>
         </StaggerContainer>
+
+        {/* Interactive Tech Cloud / Radar */}
+        <section className="mb-10">
+          <FadeIn direction="up" className="mb-8">
+            <h2 className="font-headline text-2xl font-bold flex items-center gap-4">
+              <div className="w-10 h-[2px] bg-gradient-to-r from-secondary to-tertiary rounded-full"></div>
+              Radar Technologique & Outils
+            </h2>
+            <p className="font-body text-sm text-on-surface-variant mt-2">Vue d'ensemble de mon écosystème technique global.</p>
+          </FadeIn>
+          
+          <StaggerContainer className="glass rounded-2xl p-8 border border-white/5">
+            <div className="flex flex-wrap gap-4 justify-center">
+              {radarTech.length > 0 ? radarTech.map(tech => (
+                <StaggerItem key={tech.id} className="group relative flex items-center justify-center p-4 bg-white/[0.02] hover:bg-white/[0.08] border border-white/5 hover:border-primary/30 rounded-xl transition-all cursor-crosshair">
+                  {tech.icon_url ? (
+                    <div className="w-10 h-10 relative grayscale opacity-70 group-hover:opacity-100 group-hover:grayscale-0 transition-all duration-300">
+                      <img src={tech.icon_url} alt={tech.name} className="w-full h-full object-contain" />
+                    </div>
+                  ) : (
+                    <span className="material-symbols-outlined text-3xl text-on-surface-variant opacity-70 group-hover:opacity-100 group-hover:text-primary transition-colors">terminal</span>
+                  )}
+                  {/* Hover Tooltip */}
+                  <div className="absolute -top-12 left-1/2 -translate-x-1/2 bg-surface border border-white/10 px-3 py-1.5 rounded-lg text-xs font-bold text-white opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-20 shadow-[0_10px_30px_rgba(0,0,0,0.5)]">
+                    {tech.name}
+                    <span className="block text-[9px] text-primary mt-0.5 uppercase tracking-wider">{tech.category}</span>
+                  </div>
+                </StaggerItem>
+              )) : (
+                <p className="text-sm text-on-surface-variant font-body">Aucune technologie dans le radar.</p>
+              )}
+            </div>
+          </StaggerContainer>
+        </section>
       </div>
     </>
   );

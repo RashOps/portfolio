@@ -86,7 +86,7 @@ export default function OperatorProfile() {
                 <span className="font-headline text-xs font-bold uppercase tracking-widest text-on-surface">Visualiser CV</span>
               </button>
               <a 
-                href="/assets/cv.pdf" 
+                href={profile?.cv_url || "/assets/cv.pdf"} 
                 download
                 className="w-14 glass rounded-xl flex items-center justify-center text-on-surface-variant hover:text-primary transition-colors"
                 title="Télécharger directement"
@@ -142,7 +142,7 @@ export default function OperatorProfile() {
                     ))}
                   </div>
                 ) : skills.length > 0 ? (
-                  skills.map((skill) => {
+                  skills.filter(s => s.display_location !== 'skill-tree').map((skill) => {
                     let colorClass = "primary";
                     if (skill.category === "Engineering" || skill.name.toLowerCase().includes("engineering")) colorClass = "secondary";
                     else if (skill.category === "Biz" || skill.name.toLowerCase().includes("business") || skill.name.toLowerCase().includes("vision")) colorClass = "tertiary";
@@ -194,8 +194,9 @@ export default function OperatorProfile() {
             </div>
 
             {/* Parcours (Expériences) */}
-            <StaggerItem className="glass rounded-2xl p-6 sm:p-8">
-              <h2 className="font-headline text-xl tracking-tight text-on-surface mb-8 pb-2 border-b border-white/10 flex items-center gap-2">
+            {profile?.show_experiences !== false && (
+              <StaggerItem className="glass rounded-2xl p-6 sm:p-8">
+                <h2 className="font-headline text-xl tracking-tight text-on-surface mb-8 pb-2 border-b border-white/10 flex items-center gap-2">
                 <span className="material-symbols-outlined text-tertiary" style={{ fontVariationSettings: "'FILL' 1" }}>work_history</span>
                 Parcours & Expériences
               </h2>
@@ -224,11 +225,13 @@ export default function OperatorProfile() {
                   <p className="text-center text-on-surface-variant text-sm font-body">Aucun parcours renseigné.</p>
                 )}
               </div>
-            </StaggerItem>
+              </StaggerItem>
+            )}
 
             {/* Tech Stack */}
-            <StaggerItem className="glass rounded-2xl p-6 sm:p-8">
-              <h2 className="font-headline text-xl tracking-tight text-on-surface mb-8 pb-2 border-b border-white/10 flex items-center gap-2">
+            {profile?.show_tech_stack !== false && (
+              <StaggerItem className="glass rounded-2xl p-6 sm:p-8">
+                <h2 className="font-headline text-xl tracking-tight text-on-surface mb-8 pb-2 border-b border-white/10 flex items-center gap-2">
                 <span className="material-symbols-outlined text-secondary" style={{ fontVariationSettings: "'FILL' 1" }}>terminal</span>
                 Stack Technique
               </h2>
@@ -253,6 +256,7 @@ export default function OperatorProfile() {
                 )}
               </div>
             </StaggerItem>
+            )}
             
             {/* CTA */}
             <StaggerItem className="pt-4">
@@ -281,7 +285,7 @@ export default function OperatorProfile() {
       </div>
 
       {/* CV Modal Overlay */}
-      <CVModal isOpen={isCVOpen} onClose={() => setIsCVOpen(false)} />
+      <CVModal isOpen={isCVOpen} onClose={() => setIsCVOpen(false)} cvUrl={profile?.cv_url || "/assets/cv.pdf"} />
     </main>
   );
 }

@@ -17,7 +17,7 @@ import {
   addTechAction, updateTechAction, deleteTechAction,
   addExplorationAction, updateExplorationAction, deleteExplorationAction,
   addSkillAction, updateSkillAction, deleteSkillAction,
-  uploadImageAction
+  uploadImageAction, uploadCVAction
 } from "@/lib/actions";
 import { motion } from "framer-motion";
 import Link from "next/link";
@@ -50,7 +50,9 @@ export default function AdminDashboard() {
 
   // Form States (Profile)
   const [profileForm, setProfileForm] = useState({
-    name: "", status: "", location: "", specialization: "", formation_text: "", objectives_text: ""
+    name: "", status: "", location: "", specialization: "", formation_text: "", objectives_text: "",
+    versatility_dynamic: true, versatility_manual: 86,
+    show_tech_stack: true, show_experiences: true, cv_url: ""
   });
 
   // Form States (Experiences)
@@ -64,7 +66,7 @@ export default function AdminDashboard() {
   const [isAddingTech, setIsAddingTech] = useState(false);
   const [editingTechId, setEditingTechId] = useState(null);
   const [techForm, setTechForm] = useState({
-    name: "", icon_url: "", category: "Languages"
+    name: "", icon_url: "", category: "Languages", show_in_radar: true
   });
 
   // Form States (Explorations)
@@ -78,7 +80,7 @@ export default function AdminDashboard() {
   const [isAddingSkill, setIsAddingSkill] = useState(false);
   const [editingSkillId, setEditingSkillId] = useState(null);
   const [skillForm, setSkillForm] = useState({
-    name: "", category: "Engineering", percentage: 50
+    name: "", category: "Engineering", percentage: 50, display_location: "both"
   });
 
   useEffect(() => {
@@ -125,7 +127,6 @@ export default function AdminDashboard() {
 
   const handleSignOut = () => signOut({ callbackUrl: "/admin/login" });
 
-  // --- Handlers : Images Upload ---
   const handleImageUpload = async (e, formSetter, formState) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -139,6 +140,23 @@ export default function AdminDashboard() {
       alert("Image uploadée avec succès !");
     } catch (err) {
       alert("Erreur upload: " + err.message);
+    }
+    setIsUploading(false);
+  };
+
+  const handleCVUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    setIsUploading(true);
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+      const url = await uploadCVAction(formData);
+      setProfileForm({ ...profileForm, cv_url: url });
+      alert("CV uploadé et écrasé avec succès !");
+      fetchData();
+    } catch (err) {
+      alert("Erreur upload CV: " + err.message);
     }
     setIsUploading(false);
   };
@@ -236,14 +254,15 @@ export default function AdminDashboard() {
       }
       setIsAddingTech(false);
       setEditingTechId(null);
-      setTechForm({ name: "", icon_url: "", category: "Languages" });
+      setTechForm({ name: "", icon_url: "", category: "Languages", show_in_radar: true });
       fetchData();
     } catch (err) { alert("Erreur : " + err.message); }
   };
   const handleEditTech = (tech) => {
     setTechForm({
       ...tech,
-      icon_url: tech.icon_url || ""
+      icon_url: tech.icon_url || "",
+      show_in_radar: tech.show_in_radar !== false
     });
     setEditingTechId(tech.id);
     setIsAddingTech(true);
@@ -286,13 +305,13 @@ export default function AdminDashboard() {
     e.preventDefault();
     try {
       if (editingSkillId) {
-        await updateSkillAction(editingSkillId, skillForm.percentage);
+        await updateSkillAction(editingSkillId, skillForm);
       } else {
         await addSkillAction(skillForm);
       }
       setIsAddingSkill(false);
       setEditingSkillId(null);
-      setSkillForm({ name: "", category: "Engineering", percentage: 50 });
+      setSkillForm({ name: "", category: "Engineering", percentage: 50, display_location: "both" });
       fetchData();
     } catch (err) { alert("Erreur : " + err.message); }
   };
@@ -450,8 +469,50 @@ export default function AdminDashboard() {
                   <input required type="text" placeholder="Localisation" className="bg-surface-container rounded-lg px-4 py-3 text-sm w-full" value={profileForm.location} onChange={e => setProfileForm({...profileForm, location: e.target.value})} />
                   <input required type="text" placeholder="Spécialisation" className="bg-surface-container rounded-lg px-4 py-3 text-sm w-full" value={profileForm.specialization} onChange={e => setProfileForm({...profileForm, specialization: e.target.value})} />
                 </div>
-                <textarea placeholder="Texte de Formation" className="bg-surface-container rounded-lg px-4 py-3 text-sm w-full h-24" value={profileForm.formation_text} onChange={e => setProfileForm({...profileForm, formation_text: e.target.value})}></textarea>
-                <textarea placeholder="Objectifs / Valeurs" className="bg-surface-container rounded-lg px-4 py-3 text-sm w-full h-24" value={profileForm.objectives_text} onChange={e => setProfileForm({...profileForm, objectives_text: e.target.value})}></textarea>
+                
+                <div className="glass rounded-xl p-4 border border-white/5 space-y-4">
+                  <h3 className="font-bold text-sm text-primary">Configuration : Indice de Polyvalence (SkillTree)</h3>
+                  <div className="flex items-center gap-4">
+                    <label className="flex items-center gap-2 cursor-pointer text-sm font-bold text-on-surface-variant">
+                      <input type="checkbox" className="w-4 h-4 accent-primary" checked={profileForm.versatility_dynamic !== false} onChange={e => setProfileForm({...profileForm, versatility_dynamic: e.target.checked})} />
+                      Calcul Dynamique (Basé sur la moyenne des Skills)
+                    </label>
+                  </div>
+                  {profileForm.versatility_dynamic === false && (
+                    <div>
+                      <label className="text-xs text-on-surface-variant block mb-1">Valeur Manuelle de l'indice (ex: 86)</label>
+                      <input type="number" min="0" max="100" className="bg-surface-container rounded-lg px-4 py-2 text-sm w-32 focus:ring-1 focus:ring-primary" value={profileForm.versatility_manual || 86} onChange={e => setProfileForm({...profileForm, versatility_manual: parseInt(e.target.value)})} />
+                    </div>
+                  )}
+                </div>
+                <div className="glass rounded-xl p-4 border border-white/5 space-y-4 mt-4">
+                  <h3 className="font-bold text-sm text-secondary">Modularité de la page Profil</h3>
+                  <div className="flex items-center gap-6 flex-wrap">
+                    <label className="flex items-center gap-2 cursor-pointer text-sm font-bold text-on-surface-variant">
+                      <input type="checkbox" className="w-4 h-4 accent-secondary" checked={profileForm.show_tech_stack !== false} onChange={e => setProfileForm({...profileForm, show_tech_stack: e.target.checked})} />
+                      Afficher la section "Stack Technique"
+                    </label>
+                    <label className="flex items-center gap-2 cursor-pointer text-sm font-bold text-on-surface-variant">
+                      <input type="checkbox" className="w-4 h-4 accent-tertiary" checked={profileForm.show_experiences !== false} onChange={e => setProfileForm({...profileForm, show_experiences: e.target.checked})} />
+                      Afficher la section "Parcours & Expériences"
+                    </label>
+                  </div>
+                </div>
+
+                <div className="glass rounded-xl p-4 border border-white/5 space-y-4 mt-4">
+                  <h3 className="font-bold text-sm text-tertiary flex items-center justify-between">
+                    Curriculum Vitae (PDF)
+                    {profileForm.cv_url && <a href={profileForm.cv_url} target="_blank" className="text-xs text-blue-400 hover:underline">Voir le CV actuel</a>}
+                  </h3>
+                  <div className="flex items-center gap-4">
+                    <input type="file" accept="application/pdf" onChange={handleCVUpload} className="text-sm bg-surface-container rounded-lg p-2 w-full" disabled={isUploading}/>
+                    {isUploading && <span className="text-xs text-on-surface-variant animate-pulse">Upload...</span>}
+                  </div>
+                  <p className="text-xs text-on-surface-variant/70 italic">En uplaodant un nouveau CV, l'ancien sera automatiquement écrasé (upsert) pour ne pas encombrer le serveur.</p>
+                </div>
+
+                <textarea placeholder="Texte de Formation" className="bg-surface-container rounded-lg px-4 py-3 text-sm w-full h-24 mt-4" value={profileForm.formation_text} onChange={e => setProfileForm({...profileForm, formation_text: e.target.value})}></textarea>
+                <textarea placeholder="Objectifs / Valeurs" className="bg-surface-container rounded-lg px-4 py-3 text-sm w-full h-24 mt-4" value={profileForm.objectives_text} onChange={e => setProfileForm({...profileForm, objectives_text: e.target.value})}></textarea>
                 <button type="submit" className="w-full bg-primary text-background font-bold py-3 rounded-lg">Mettre à jour le profil</button>
               </form>
             </motion.div>
@@ -524,9 +585,14 @@ export default function AdminDashboard() {
                       <input required type="text" placeholder="Nom (ex: Python)" className="bg-surface-container rounded-lg px-4 py-3 text-sm w-full" value={techForm.name} onChange={e => setTechForm({...techForm, name: e.target.value})} />
                       <select className="bg-surface-container rounded-lg px-4 py-3 text-sm w-full" value={techForm.category} onChange={e => setTechForm({...techForm, category: e.target.value})}>
                         <option value="Languages">Languages</option>
-                        <option value="Frameworks">Frameworks</option>
+                        <option value="Frameworks">Frameworks / Dev & Ops</option>
                         <option value="Databases & Tools">Databases & Tools</option>
+                        <option value="Dataviz & BI">Dataviz & BI</option>
                       </select>
+                    </div>
+                    <div className="flex items-center gap-4 bg-surface-container rounded-lg px-4 py-3">
+                      <input type="checkbox" id="show_in_radar" className="w-4 h-4 accent-primary" checked={techForm.show_in_radar !== false} onChange={e => setTechForm({...techForm, show_in_radar: e.target.checked})} />
+                      <label htmlFor="show_in_radar" className="text-sm font-bold text-on-surface-variant cursor-pointer">Afficher dans le Radar Technologique (SkillTree)</label>
                     </div>
                     <div className="bg-surface-container p-4 rounded-lg flex items-center justify-between">
                       <div className="text-sm text-on-surface-variant">Icone (Optionnel):</div>
@@ -623,8 +689,14 @@ export default function AdminDashboard() {
                       <input required type="text" placeholder="Nom de la compétence" className="bg-surface-container rounded-lg px-4 py-3 text-sm w-full" value={skillForm.name} onChange={e => setSkillForm({...skillForm, name: e.target.value})} />
                       <select className="bg-surface-container rounded-lg px-4 py-3 text-sm w-full" value={skillForm.category} onChange={e => setSkillForm({...skillForm, category: e.target.value})}>
                         <option value="Engineering">Engineering</option>
-                        <option value="Science">Science</option>
+                        <option value="Science">Data Science & IA</option>
                         <option value="Biz">Biz / Management</option>
+                        <option value="Languages">Langages (Python, SQL...)</option>
+                      </select>
+                      <select className="bg-surface-container rounded-lg px-4 py-3 text-sm w-full md:col-span-2" value={skillForm.display_location} onChange={e => setSkillForm({...skillForm, display_location: e.target.value})}>
+                        <option value="both">Afficher partout (Operator Profile & SkillTree)</option>
+                        <option value="profile">Afficher UNIQUEMENT sur l'Operator Profile</option>
+                        <option value="skill-tree">Afficher UNIQUEMENT sur le SkillTree</option>
                       </select>
                       <div className="md:col-span-2">
                         <label className="text-sm text-on-surface-variant block mb-2">Maîtrise : {skillForm.percentage}%</label>
