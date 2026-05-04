@@ -177,9 +177,9 @@ export async function addSkillAction(skillData) {
   return data[0];
 }
 
-export async function updateSkillAction(id, percentage) {
+export async function updateSkillAction(id, skillData) {
   await checkAuth();
-  const { data, error } = await supabaseAdmin.from('skills').update({ percentage }).eq('id', id).select();
+  const { data, error } = await supabaseAdmin.from('skills').update(skillData).eq('id', id).select();
   if (error) throw new Error(error.message);
   revalidatePath('/operator-profile');
   revalidatePath('/admin/dashboard');
@@ -229,4 +229,47 @@ export async function uploadImageAction(formData) {
     .getPublicUrl(filePath);
 
   return data.publicUrl;
+}
+
+export async function uploadCVAction(formData) {
+  await checkAuth();
+  const file = formData.get('file');
+  
+  if (!file) throw new Error("Aucun fichier fourni.");
+
+  const arrayBuffer = await file.arrayBuffer();
+  const buffer = Buffer.from(arrayBuffer);
+
+  // Utilisation d'un nom constant pour écraser l'ancien
+  const filePath = `documents/cv_resume.pdf`;
+
+  const { error } = await supabaseAdmin.storage
+    .from('portfolio-assets')
+    .upload(filePath, buffer, { 
+      contentType: 'application/pdf',
+      cacheControl: '10', // Low cache control to ensure the new version is fetched
+      upsert: true 
+    });
+
+  if (error) throw new Error(error.message);
+
+  const { data } = supabaseAdmin.storage
+    .from('portfolio-assets')
+    .getPublicUrl(filePath);
+
+  // Mettre à jour l'URL dans le profil (avec timestamp pour bypass cache navigateur)
+  const cvUrl = `${data.publicUrl}?t=${Date.now()}`;
+  
+  // Update operator_profile
+  const { data: existingProfile } = await supabaseAdmin.from('operator_profile').select('id').limit(1).single();
+  if (existingProfile) {
+    await supabaseAdmin.from('operator_profile').update({ cv_url: cvUrl }).eq('id', existingProfile.id);
+  } else {
+    await supabaseAdmin.from('operator_profile').insert([{ cv_url: cvUrl }]);
+  }
+
+  revalidatePath('/operator-profile');
+  revalidatePath('/admin/dashboard');
+  
+  return cvUrl;
 }
