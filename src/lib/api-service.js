@@ -3,7 +3,7 @@
  * Interfacage avec le backend FastAPI (MarketPulse Engine)
  */
 
-const MARKETPULSE_API_URL = "https://marketpulse-ia-production.up.railway.app";
+const MARKETPULSE_API_URL = "https://rashops-marketpulse-ai.hf.space";
 
 export const apiService = {
   /**
