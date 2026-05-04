@@ -28,8 +28,18 @@ export default function MissionLog() {
           links: {
             live: m.url || null,
             github: m.github_url || null
-          }
+          },
+          client_name: m.client_name || null,
+          role: m.role || null,
+          key_metrics: m.key_metrics || null,
+          content: m.content || null,
+          is_featured: m.is_featured || false,
+          date_range: (m.start_date || m.end_date) ? `${m.start_date || ''} ${m.end_date ? ' - ' + m.end_date : ''}`.trim() : null
         }));
+        
+        // Tri : Featured en premier
+        formattedProjects.sort((a, b) => (b.is_featured === a.is_featured) ? 0 : b.is_featured ? 1 : -1);
+        
         setProjects(formattedProjects);
       } catch (error) {
         console.error("Erreur lors du chargement des missions", error);
@@ -123,15 +133,32 @@ export default function MissionLog() {
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.9 }}
               transition={{ duration: 0.3 }}
-              className="group glass rounded-2xl overflow-hidden card-hover block flex flex-col h-full border border-white/5"
+              className={`group glass rounded-2xl overflow-hidden card-hover block flex flex-col h-full border ${project.is_featured ? 'border-primary/30 shadow-[0_0_20px_rgba(167,139,250,0.05)]' : 'border-white/5'}`}
             >
-              <div className="p-6 flex-grow flex flex-col">
-                <div className="flex justify-between items-start mb-6">
+              <div className="p-6 flex-grow flex flex-col relative overflow-hidden">
+                {project.is_featured && <div className="absolute top-0 right-0 w-32 h-32 bg-primary/20 blur-3xl rounded-full -translate-y-1/2 translate-x-1/2"></div>}
+                
+                <div className="flex justify-between items-start mb-6 relative z-10">
                   <div>
-                    <span className="font-body text-[10px] text-secondary mb-1 block uppercase tracking-[0.2em] font-black opacity-60">{project.category}</span>
-                    <h3 className="text-xl font-headline font-bold text-on-surface group-hover:text-primary transition-colors">{project.title}</h3>
+                    <span className="font-body text-[10px] text-secondary mb-1 block uppercase tracking-[0.2em] font-black opacity-60">
+                      {project.category}
+                    </span>
+                    <h3 className="text-xl font-headline font-bold text-on-surface group-hover:text-primary transition-colors flex items-center gap-2">
+                      {project.title}
+                      {project.is_featured && <span className="material-symbols-outlined text-yellow-400 text-sm" title="Mission Phare">star</span>}
+                    </h3>
+                    
+                    {(project.role || project.client_name || project.date_range) && (
+                      <div className="mt-1 text-xs text-on-surface-variant font-medium flex flex-wrap items-center gap-x-2 gap-y-1">
+                        {project.role && <span className="text-primary/80">{project.role}</span>}
+                        {project.role && project.client_name && <span>@</span>}
+                        {project.client_name && <span className="text-white/80">{project.client_name}</span>}
+                        {(project.role || project.client_name) && project.date_range && <span>•</span>}
+                        {project.date_range && <span className="text-[10px] opacity-70">{project.date_range}</span>}
+                      </div>
+                    )}
                   </div>
-                  <div className={`px-2.5 py-1 rounded-lg text-[9px] font-bold uppercase tracking-tight ${project.status === "Déployé" ? "bg-green-500/10 text-green-400 border border-green-500/20" : "bg-primary/10 text-primary border border-primary/20"}`}>
+                  <div className={`shrink-0 ml-4 px-2.5 py-1 rounded-lg text-[9px] font-bold uppercase tracking-tight ${project.status === "Déployé" ? "bg-green-500/10 text-green-400 border border-green-500/20" : "bg-primary/10 text-primary border border-primary/20"}`}>
                     {project.status}
                   </div>
                 </div>
@@ -165,7 +192,17 @@ export default function MissionLog() {
                   </div>
                 </div>
 
-                <p className="text-sm text-on-surface-variant font-body mb-6 leading-relaxed flex-grow opacity-80">
+                {project.key_metrics && (
+                  <div className="mb-4 bg-primary/5 border border-primary/10 rounded-lg p-3 text-[10px] font-mono text-primary flex flex-col gap-1 shadow-inner relative z-10">
+                    <div className="flex items-center gap-1.5 opacity-70 uppercase tracking-wider font-bold mb-0.5">
+                      <span className="material-symbols-outlined text-[12px]">insights</span>
+                      Impact & Métriques
+                    </div>
+                    <span className="leading-relaxed">{project.key_metrics}</span>
+                  </div>
+                )}
+
+                <p className="text-sm text-on-surface-variant font-body mb-6 leading-relaxed flex-grow opacity-80 relative z-10">
                   {project.description}
                 </p>
                 

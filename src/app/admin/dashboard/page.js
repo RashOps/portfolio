@@ -8,9 +8,17 @@ import {
   profileService, 
   experienceService, 
   techStackService, 
-  explorationService,
-  storageService
+  explorationService 
 } from "@/lib/supabase-client";
+import {
+  addMissionAction, updateMissionAction, deleteMissionAction,
+  updateProfileAction,
+  addExperienceAction, updateExperienceAction, deleteExperienceAction,
+  addTechAction, updateTechAction, deleteTechAction,
+  addExplorationAction, updateExplorationAction, deleteExplorationAction,
+  addSkillAction, updateSkillAction, deleteSkillAction,
+  uploadImageAction
+} from "@/lib/actions";
 import { motion } from "framer-motion";
 import Link from "next/link";
 
@@ -26,6 +34,7 @@ export default function AdminDashboard() {
   const [explorations, setExplorations] = useState([]);
   
   const [isLoading, setIsLoading] = useState(true);
+  const [isSyncing, setIsSyncing] = useState(false);
   const [activeTab, setActiveTab] = useState("missions");
 
   // Loading States for forms
@@ -35,7 +44,8 @@ export default function AdminDashboard() {
   const [isAddingMission, setIsAddingMission] = useState(false);
   const [editingMissionId, setEditingMissionId] = useState(null);
   const [missionForm, setMissionForm] = useState({
-    title: "", description: "", tech_stack: "", url: "", github_url: "", image_url: "", status: "Active", category: "Fullstack", filterGroup: "Tous"
+    title: "", description: "", tech_stack: "", url: "", github_url: "", image_url: "", status: "Active", category: "Fullstack", filterGroup: "Tous",
+    client_name: "", role: "", key_metrics: "", content: "", is_featured: false, start_date: "", end_date: ""
   });
 
   // Form States (Profile)
@@ -105,6 +115,12 @@ export default function AdminDashboard() {
       console.error("Erreur chargement:", err);
     }
     setIsLoading(false);
+    setIsSyncing(false);
+  };
+
+  const handleSync = () => {
+    setIsSyncing(true);
+    fetchData();
   };
 
   const handleSignOut = () => signOut({ callbackUrl: "/admin/login" });
@@ -115,7 +131,10 @@ export default function AdminDashboard() {
     if (!file) return;
     setIsUploading(true);
     try {
-      const url = await storageService.uploadImage(file, 'uploads');
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('path', 'uploads');
+      const url = await uploadImageAction(formData);
       formSetter({ ...formState, image_url: url });
       alert("Image uploadée avec succès !");
     } catch (err) {
@@ -133,13 +152,13 @@ export default function AdminDashboard() {
         tech_stack: Array.isArray(missionForm.tech_stack) ? missionForm.tech_stack : missionForm.tech_stack.split(',').map(s => s.trim())
       };
       if (editingMissionId) {
-        await missionService.updateMission(editingMissionId, formattedData);
+        await updateMissionAction(editingMissionId, formattedData);
       } else {
-        await missionService.addMission(formattedData);
+        await addMissionAction(formattedData);
       }
       setIsAddingMission(false);
       setEditingMissionId(null);
-      setMissionForm({ title: "", description: "", tech_stack: "", url: "", github_url: "", image_url: "", status: "Active", category: "Fullstack", filterGroup: "Tous" });
+      setMissionForm({ title: "", description: "", tech_stack: "", url: "", github_url: "", image_url: "", status: "Active", category: "Fullstack", filterGroup: "Tous", client_name: "", role: "", key_metrics: "", content: "", is_featured: false, start_date: "", end_date: "" });
       fetchData();
     } catch (err) { alert("Erreur : " + err.message); }
   };
@@ -151,20 +170,27 @@ export default function AdminDashboard() {
       github_url: mission.github_url || "",
       image_url: mission.image_url || "",
       description: mission.description || "",
-      title: mission.title || ""
+      title: mission.title || "",
+      client_name: mission.client_name || "",
+      role: mission.role || "",
+      key_metrics: mission.key_metrics || "",
+      content: mission.content || "",
+      is_featured: mission.is_featured || false,
+      start_date: mission.start_date || "",
+      end_date: mission.end_date || ""
     });
     setEditingMissionId(mission.id);
     setIsAddingMission(true);
   };
   const handleDeleteMission = async (id) => {
-    if (confirm("Supprimer cette mission ?")) { await missionService.deleteMission(id); fetchData(); }
+    if (confirm("Supprimer cette mission ?")) { await deleteMissionAction(id); fetchData(); }
   };
 
   // --- Handlers : Profile ---
   const handleSaveProfile = async (e) => {
     e.preventDefault();
     try {
-      await profileService.updateProfile(profileForm);
+      await updateProfileAction(profileForm);
       alert("Profil sauvegardé !");
       fetchData();
     } catch (err) { alert("Erreur : " + err.message); }
@@ -175,9 +201,9 @@ export default function AdminDashboard() {
     e.preventDefault();
     try {
       if (editingExpId) {
-        await experienceService.updateExperience(editingExpId, expForm);
+        await updateExperienceAction(editingExpId, expForm);
       } else {
-        await experienceService.addExperience(expForm);
+        await addExperienceAction(expForm);
       }
       setIsAddingExp(false);
       setEditingExpId(null);
@@ -196,7 +222,7 @@ export default function AdminDashboard() {
     setIsAddingExp(true);
   };
   const handleDeleteExp = async (id) => {
-    if (confirm("Supprimer cette expérience ?")) { await experienceService.deleteExperience(id); fetchData(); }
+    if (confirm("Supprimer cette expérience ?")) { await deleteExperienceAction(id); fetchData(); }
   };
 
   // --- Handlers : Tech Stack ---
@@ -204,9 +230,9 @@ export default function AdminDashboard() {
     e.preventDefault();
     try {
       if (editingTechId) {
-        await techStackService.updateTech(editingTechId, techForm);
+        await updateTechAction(editingTechId, techForm);
       } else {
-        await techStackService.addTech(techForm);
+        await addTechAction(techForm);
       }
       setIsAddingTech(false);
       setEditingTechId(null);
@@ -223,7 +249,7 @@ export default function AdminDashboard() {
     setIsAddingTech(true);
   };
   const handleDeleteTech = async (id) => {
-    if (confirm("Supprimer cette techno ?")) { await techStackService.deleteTech(id); fetchData(); }
+    if (confirm("Supprimer cette techno ?")) { await deleteTechAction(id); fetchData(); }
   };
 
   // --- Handlers : Explorations ---
@@ -231,9 +257,9 @@ export default function AdminDashboard() {
     e.preventDefault();
     try {
       if (editingExplorationId) {
-        await explorationService.updateExploration(editingExplorationId, explorationForm);
+        await updateExplorationAction(editingExplorationId, explorationForm);
       } else {
-        await explorationService.addExploration(explorationForm);
+        await addExplorationAction(explorationForm);
       }
       setIsAddingExploration(false);
       setEditingExplorationId(null);
@@ -252,7 +278,7 @@ export default function AdminDashboard() {
     setIsAddingExploration(true);
   };
   const handleDeleteExploration = async (id) => {
-    if (confirm("Supprimer cette exploration ?")) { await explorationService.deleteExploration(id); fetchData(); }
+    if (confirm("Supprimer cette exploration ?")) { await deleteExplorationAction(id); fetchData(); }
   };
 
   // --- Handlers : Skills ---
@@ -260,10 +286,9 @@ export default function AdminDashboard() {
     e.preventDefault();
     try {
       if (editingSkillId) {
-        await skillService.updateSkill(editingSkillId, skillForm.percentage); // Simplified as only percentage is commonly updated
-        // If full update needed, you can modify updateSkill in the service
+        await updateSkillAction(editingSkillId, skillForm.percentage);
       } else {
-        await skillService.addSkill(skillForm);
+        await addSkillAction(skillForm);
       }
       setIsAddingSkill(false);
       setEditingSkillId(null);
@@ -277,7 +302,7 @@ export default function AdminDashboard() {
     setIsAddingSkill(true);
   };
   const handleDeleteSkill = async (id) => {
-    if (confirm("Supprimer cette compétence ?")) { await skillService.deleteSkill(id); fetchData(); }
+    if (confirm("Supprimer cette compétence ?")) { await deleteSkillAction(id); fetchData(); }
   };
 
   if (status === "loading" || isLoading) return <div className="min-h-screen bg-background flex items-center justify-center text-primary animate-pulse">Chargement de l'interface...</div>;
@@ -296,7 +321,12 @@ export default function AdminDashboard() {
       {/* HEADER */}
       <header className="max-w-6xl mx-auto glass rounded-2xl p-6 mb-8 flex flex-col md:flex-row justify-between items-center gap-4 border border-white/5">
         <div>
-          <h1 className="text-2xl font-headline font-bold text-primary">Portfolio CMS Engine</h1>
+          <h1 className="text-2xl font-headline font-bold text-primary flex items-center gap-3">
+            Portfolio CMS Engine
+            <button onClick={handleSync} disabled={isSyncing} className={`p-1.5 rounded-lg bg-white/5 hover:bg-white/10 transition-colors ${isSyncing ? "animate-spin opacity-50" : ""}`} title="Synchroniser avec la base de données">
+              <span className="material-symbols-outlined text-sm">sync</span>
+            </button>
+          </h1>
           <p className="text-xs text-on-surface-variant">Connecté en tant que: <span className="text-white">{session?.user?.email}</span></p>
         </div>
         <div className="flex items-center gap-4">
@@ -334,7 +364,7 @@ export default function AdminDashboard() {
                 <h2 className="text-xl font-headline font-bold">Missions Phares</h2>
                 <button onClick={() => {
                   setEditingMissionId(null);
-                  setMissionForm({ title: "", description: "", tech_stack: "", url: "", github_url: "", image_url: "", status: "Active", category: "Fullstack", filterGroup: "Tous" });
+                  setMissionForm({ title: "", description: "", tech_stack: "", url: "", github_url: "", image_url: "", status: "Active", category: "Fullstack", filterGroup: "Tous", client_name: "", role: "", key_metrics: "", content: "", is_featured: false, start_date: "", end_date: "" });
                   setIsAddingMission(!isAddingMission);
                 }} className="bg-primary text-background px-4 py-2 rounded-lg text-xs font-bold uppercase">
                   {isAddingMission ? "Annuler" : "+ Ajouter"}
@@ -354,16 +384,35 @@ export default function AdminDashboard() {
                         <option value="Fullstack">Fullstack</option>
                         <option value="Tous">Tous</option>
                       </select>
+                      
+                      <input type="text" placeholder="Client / Entreprise (optionnel)" className="bg-surface-container rounded-lg px-4 py-3 text-sm focus:ring-1 focus:ring-primary w-full" value={missionForm.client_name} onChange={e => setMissionForm({...missionForm, client_name: e.target.value})} />
+                      <input type="text" placeholder="Rôle (optionnel, ex: Lead Data Engineer)" className="bg-surface-container rounded-lg px-4 py-3 text-sm focus:ring-1 focus:ring-primary w-full" value={missionForm.role} onChange={e => setMissionForm({...missionForm, role: e.target.value})} />
+                      
+                      <input type="text" placeholder="Date début (ex: Juin 2025)" className="bg-surface-container rounded-lg px-4 py-3 text-sm focus:ring-1 focus:ring-primary w-full" value={missionForm.start_date} onChange={e => setMissionForm({...missionForm, start_date: e.target.value})} />
+                      <input type="text" placeholder="Date fin (ex: Sept 2025)" className="bg-surface-container rounded-lg px-4 py-3 text-sm focus:ring-1 focus:ring-primary w-full" value={missionForm.end_date} onChange={e => setMissionForm({...missionForm, end_date: e.target.value})} />
+                      
+                      <input type="text" placeholder="Métriques d'impact (ex: Précision 98% | Latence -40%)" className="bg-surface-container rounded-lg px-4 py-3 text-sm focus:ring-1 focus:ring-primary w-full md:col-span-2" value={missionForm.key_metrics} onChange={e => setMissionForm({...missionForm, key_metrics: e.target.value})} />
+
                       <input required type="text" placeholder="Technologies (virgule)" className="bg-surface-container rounded-lg px-4 py-3 text-sm focus:ring-1 focus:ring-primary w-full" value={missionForm.tech_stack} onChange={e => setMissionForm({...missionForm, tech_stack: e.target.value})} />
                       <input type="text" placeholder="URL Démo ou /route interne (optionnel)" className="bg-surface-container rounded-lg px-4 py-3 text-sm focus:ring-1 focus:ring-primary w-full" value={missionForm.url} onChange={e => setMissionForm({...missionForm, url: e.target.value})} />
-                      <input type="url" placeholder="URL GitHub (optionnel)" className="bg-surface-container rounded-lg px-4 py-3 text-sm focus:ring-1 focus:ring-primary w-full md:col-span-2" value={missionForm.github_url} onChange={e => setMissionForm({...missionForm, github_url: e.target.value})} />
+                      
+                      <input type="url" placeholder="URL GitHub (optionnel)" className="bg-surface-container rounded-lg px-4 py-3 text-sm focus:ring-1 focus:ring-primary w-full" value={missionForm.github_url} onChange={e => setMissionForm({...missionForm, github_url: e.target.value})} />
+                      <div className="bg-surface-container rounded-lg px-4 py-3 text-sm focus:ring-1 focus:ring-primary w-full flex items-center gap-3">
+                        <input type="checkbox" id="is_featured" className="w-4 h-4 accent-primary" checked={missionForm.is_featured} onChange={e => setMissionForm({...missionForm, is_featured: e.target.checked})} />
+                        <label htmlFor="is_featured" className="text-on-surface-variant font-bold cursor-pointer">Mettre en avant (Featured ⭐)</label>
+                      </div>
                     </div>
+                    
                     <div className="bg-surface-container p-4 rounded-lg flex items-center justify-between">
                       <div className="text-sm text-on-surface-variant">Image Cover (Optionnel):</div>
                       <input type="file" accept="image/*" onChange={(e) => handleImageUpload(e, setMissionForm, missionForm)} className="text-sm" disabled={isUploading}/>
                       {missionForm.image_url && <span className="text-xs text-green-400">✅ Uploaded</span>}
                     </div>
-                    <textarea required placeholder="Description détaillée..." className="bg-surface-container rounded-lg px-4 py-3 text-sm focus:ring-1 focus:ring-primary w-full h-24" value={missionForm.description} onChange={e => setMissionForm({...missionForm, description: e.target.value})}></textarea>
+                    
+                    <textarea required placeholder="Description courte (utilisée pour la carte)..." className="bg-surface-container rounded-lg px-4 py-3 text-sm focus:ring-1 focus:ring-primary w-full h-20" value={missionForm.description} onChange={e => setMissionForm({...missionForm, description: e.target.value})}></textarea>
+                    
+                    <textarea placeholder="Contenu détaillé (Markdown) pour une future page dédiée (Optionnel)..." className="bg-surface-container rounded-lg px-4 py-3 text-sm focus:ring-1 focus:ring-primary w-full h-40 font-mono text-xs" value={missionForm.content} onChange={e => setMissionForm({...missionForm, content: e.target.value})}></textarea>
+                    
                     <button type="submit" className="w-full bg-primary text-background font-bold py-3 rounded-lg" disabled={isUploading}>{editingMissionId ? "Mettre à jour" : "Sauvegarder"}</button>
                   </form>
                 </div>
@@ -373,8 +422,12 @@ export default function AdminDashboard() {
                 {missions.map(mission => (
                   <div key={mission.id} className="glass rounded-xl p-5 flex justify-between items-center hover:border-white/20">
                     <div>
-                      <h3 className="font-bold text-white">{mission.title} <span className="text-[10px] bg-primary/20 text-primary px-2 py-0.5 rounded uppercase">{mission.status}</span></h3>
-                      <p className="text-xs text-on-surface-variant">{mission.category} | {mission.filterGroup}</p>
+                      <h3 className="font-bold text-white flex items-center gap-2">
+                        {mission.is_featured && <span className="text-yellow-400 material-symbols-outlined text-sm">star</span>}
+                        {mission.title} 
+                        <span className="text-[10px] bg-primary/20 text-primary px-2 py-0.5 rounded uppercase">{mission.status}</span>
+                      </h3>
+                      <p className="text-xs text-on-surface-variant">{mission.category} | {mission.filterGroup} {mission.client_name && `• ${mission.client_name}`}</p>
                     </div>
                     <div className="flex gap-2">
                       <button onClick={() => handleEditMission(mission)} className="text-blue-400 bg-blue-400/10 p-2 rounded-lg hover:bg-blue-400/20"><span className="material-symbols-outlined text-sm">edit</span></button>
