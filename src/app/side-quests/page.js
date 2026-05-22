@@ -1,3 +1,8 @@
+export const metadata = {
+	title: "Side Quests",
+	description: "Explorations personnelles, expérimentations technologiques et projets annexes en IA et développement Fullstack.",
+};
+
 export default function SideQuests() {
 	const explorations = [
 		{

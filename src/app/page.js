@@ -9,10 +9,37 @@ import {
 	TrackedExternalLink,
 	TrackedInternalLink,
 } from "@/components/ui/TrackedLink";
+import CVButton from "@/components/ui/CVButton";
 
 export default function Home() {
+	const jsonLd = {
+		"@context": "https://schema.org",
+		"@type": "Person",
+		name: "Rayhan Touboui",
+		url: "https://www.rayhan-touboui.tech",
+		jobTitle: "Data Scientist & Business Strategist",
+		alumniOf: [
+			{
+				"@type": "CollegeOrUniversity",
+				name: "Paris School of Technology & Business (PSTB)",
+			},
+			{
+				"@type": "CollegeOrUniversity",
+				name: "Excelia",
+			},
+		],
+		sameAs: [
+			"https://www.linkedin.com/in/rayhan-touboui-machine-learning-powerbi-nlp-data-science/",
+			"https://github.com/RashOps",
+		],
+	};
+
 	return (
 		<>
+			<script
+				type="application/ld+json"
+				dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+			/>
 			{/* Hero Section */}
 			<section className="relative min-h-[870px] flex flex-col items-center justify-center px-6 overflow-hidden">
 				{/* Background Gradient Orbs */}
@@ -71,14 +98,7 @@ export default function Home() {
 									arrow_forward
 								</span>
 							</TrackedInternalLink>
-							<TrackedExternalLink
-								href="/assets/cv.pdf"
-								target="_blank"
-								eventName="cv_download"
-								className="glass text-on-surface font-headline font-medium px-8 py-4 rounded-xl text-sm hover:bg-white/10 transition-all text-center"
-							>
-								Consulter mon CV
-							</TrackedExternalLink>
+							<CVButton />
 						</FadeIn>
 					</div>
 

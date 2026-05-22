@@ -4,6 +4,11 @@ import {
 	StaggerItem,
 } from "@/components/ui/StaggerContainer";
 
+export const metadata = {
+	title: "Skill Tree",
+	description: "Arsenal technique : Python, Machine Learning, Data Engineering, DevOps et Business Intelligence.",
+};
+
 export default function SkillTree() {
 	const versatilityIndex = 86;
 	const bars = Array.from(

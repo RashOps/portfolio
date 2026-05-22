@@ -15,7 +15,11 @@ const spaceGrotesk = Space_Grotesk({
 });
 
 export const metadata = {
-	title: "Rayhan Touboui — Data & AI Portfolio",
+	metadataBase: new URL("https://www.rayhan-touboui.tech"),
+	title: {
+		default: "Rayhan Touboui — Data & AI Portfolio",
+		template: "%s | Rayhan Touboui",
+	},
 	description:
 		"Étudiant en Data Science & Intelligence Artificielle. Double cursus Tech (PSTB) et Business (Excelia). Portfolio de projets, compétences et parcours.",
 	openGraph: {
@@ -32,6 +36,9 @@ export const metadata = {
 		title: "Rayhan Touboui — Data & AI Portfolio",
 		description:
 			"Hybrid Profile: Data Science, Architecture & Business Strategy.",
+	},
+	verification: {
+		google: "t3qeGo2ZQ1Ok5CXYPjg8VTn3DbynxO_3wrgF3m3a3FA",
 	},
 };
 
