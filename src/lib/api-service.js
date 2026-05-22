@@ -3,7 +3,7 @@
  * Interfacage avec le backend FastAPI (MarketPulse Engine)
  */
 
-const MARKETPULSE_API_URL = "https://rashops-marketpulse-ai.hf.space";
+const MARKETPULSE_API_URL = process.env.NEXT_PUBLIC_MARKETPULSE_API_URL || "https://rashops-marketpulse-ai.hf.space";
 
 export const apiService = {
 	/**
@@ -204,20 +204,20 @@ export const apiService = {
  * API SERVICE - FinSight RAG
  * Interfacage avec le moteur RAG déployé sur Hugging Face
  */
-const FINSIGHT_API_URL = "https://rashops-finsight-rag.hf.space";
+const FINSIGHT_API_URL = process.env.NEXT_PUBLIC_FINSIGHT_API_URL || "https://rashops-finsight-rag.hf.space";
 
 export const finSightApiService = {
 	/**
 	 * Effectue une requête sémantique RAG
 	 * Endpoint: POST /query
 	 */
-	queryRAG: async (query, maxResults = 5) => {
+	queryRAG: async (query, sources = ["scraping"], history = [], maxResults = 5) => {
 		if (!FINSIGHT_API_URL) return null;
 		try {
 			const response = await fetch(`${FINSIGHT_API_URL}/query`, {
 				method: "POST",
 				headers: { "Content-Type": "application/json" },
-				body: JSON.stringify({ query, max_results: maxResults }),
+				body: JSON.stringify({ query, sources, history, max_results: maxResults }),
 			});
 			if (!response.ok) throw new Error("Erreur réseau FinSight RAG");
 			return await response.json();
@@ -358,6 +358,87 @@ export const finSightApiService = {
 			return await response.json();
 		} catch (error) {
 			console.error("Erreur triggerVectorization:", error);
+			return null;
+		}
+	},
+
+	/**
+	 * Récupère les Live Providers et leur statut
+	 * Endpoint: GET /providers
+	 */
+	getProviders: async () => {
+		if (!FINSIGHT_API_URL) return null;
+		try {
+			const response = await fetch(`${FINSIGHT_API_URL}/providers`, {
+				cache: "no-store",
+			});
+			if (!response.ok)
+				throw new Error("Erreur réseau FinSight RAG (providers)");
+			return await response.json();
+		} catch (error) {
+			console.error("Erreur getProviders:", error);
+			return null;
+		}
+	},
+
+	/**
+	 * Active ou désactive un Live Provider
+	 * Endpoint: POST /providers/{name}/{enable|disable}
+	 */
+	toggleProvider: async (name, enable) => {
+		if (!FINSIGHT_API_URL) return null;
+		try {
+			const action = enable ? "enable" : "disable";
+			const response = await fetch(
+				`${FINSIGHT_API_URL}/providers/${name}/${action}`,
+				{
+					method: "POST",
+					headers: { "Content-Type": "application/json" },
+				},
+			);
+			if (!response.ok) throw new Error(`Erreur ${action} Provider`);
+			return await response.json();
+		} catch (error) {
+			console.error("Erreur toggleProvider:", error);
+			return null;
+		}
+	},
+
+	/**
+	 * Récupère les sources de recherche actives
+	 * Endpoint: GET /search-sources
+	 */
+	getSearchSources: async () => {
+		if (!FINSIGHT_API_URL) return null;
+		try {
+			const response = await fetch(`${FINSIGHT_API_URL}/search-sources`, {
+				cache: "no-store",
+			});
+			if (!response.ok)
+				throw new Error("Erreur réseau FinSight RAG (search-sources)");
+			return await response.json();
+		} catch (error) {
+			console.error("Erreur getSearchSources:", error);
+			return null;
+		}
+	},
+
+	/**
+	 * Met à jour les sources de recherche actives
+	 * Endpoint: POST /search-sources
+	 */
+	updateSearchSources: async (sources) => {
+		if (!FINSIGHT_API_URL) return null;
+		try {
+			const response = await fetch(`${FINSIGHT_API_URL}/search-sources`, {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify({ sources }),
+			});
+			if (!response.ok) throw new Error("Erreur updateSearchSources");
+			return await response.json();
+		} catch (error) {
+			console.error("Erreur updateSearchSources:", error);
 			return null;
 		}
 	},

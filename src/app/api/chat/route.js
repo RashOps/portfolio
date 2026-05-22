@@ -4,9 +4,11 @@ import { z } from "zod";
 import { SYSTEM_PROMPT } from "@/lib/bot-knowledge";
 import { simpleRateLimit } from "@/lib/rate-limit";
 
-const chatSchema = z.object({
-	messages: z.array(z.any()),
-}).passthrough();
+const chatSchema = z
+	.object({
+		messages: z.array(z.any()),
+	})
+	.passthrough();
 
 export async function POST(req) {
 	// 1. Rate Limiting Sécurité

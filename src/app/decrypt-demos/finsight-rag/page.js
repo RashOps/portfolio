@@ -2,10 +2,25 @@
 
 import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { finSightApiService } from "@/lib/api-service";
+
+// Mirror of backend PROVIDER_KEYWORDS — used for real-time intent detection in the UI
+const PROVIDER_KEYWORDS = {
+	newsapi: ["newsapi", "news api", "the news api", "newsapi.org"],
+	finnhub: ["finnhub", "finn hub", "finnhub.io"],
+	marketaux: ["marketaux", "market aux"],
+};
+
+const PROVIDER_META = {
+	scraping: { label: "Local DB", color: "text-green-400", bg: "bg-green-400/10", border: "border-green-400/20", icon: "database" },
+	newsapi:  { label: "NewsAPI",  color: "text-blue-400",  bg: "bg-blue-400/10",  border: "border-blue-400/20",  icon: "newspaper" },
+	finnhub:  { label: "Finnhub",  color: "text-purple-400", bg: "bg-purple-400/10", border: "border-purple-400/20", icon: "candlestick_chart" },
+	marketaux: { label: "Marketaux", color: "text-orange-400", bg: "bg-orange-400/10", border: "border-orange-400/20", icon: "finance" },
+};
+
 
 export default function FinSightDashboard() {
 	// Telemetry States
@@ -13,6 +28,9 @@ export default function FinSightDashboard() {
 	const [dbStatus, setDbStatus] = useState(null);
 	const [articlesStatus, setArticlesStatus] = useState(null);
 	const [isLoadingTelemetry, setIsLoadingTelemetry] = useState(true);
+
+	// Providers State
+	const [providersData, setProvidersData] = useState([]);
 
 	// Ingestion Controllers State
 	const [isScraping, setIsScraping] = useState(false);
@@ -27,7 +45,7 @@ export default function FinSightDashboard() {
 			id: 1,
 			role: "assistant",
 			content:
-				"Système RAG en ligne. Posez une question sur l'actualité financière pour interroger la base Qdrant. Les réponses sont générées par Llama-3-70B.",
+				"Système RAG en ligne. Posez une question sur l'actualité financière pour interroger la base Qdrant.\n\n💡 **Astuce** : Mentionnez un provider directement dans votre message pour l'interroger en temps réel. Ex: *\"Que dit Finnhub sur Apple ?\"* ou *\"...via NewsAPI\"*.",
 			timestamp: new Date().toISOString(),
 		},
 	]);
@@ -45,16 +63,27 @@ export default function FinSightDashboard() {
 	// Fetch Telemetry Function
 	const fetchTelemetry = async () => {
 		setIsLoadingTelemetry(true);
-		const [h, db, art] = await Promise.all([
+		const [h, db, art, provs] = await Promise.all([
 			finSightApiService.getHealth(),
 			finSightApiService.getDbStatus(),
 			finSightApiService.getArticlesStatus(),
+			finSightApiService.getProviders(),
 		]);
 		setHealth(h);
 		setDbStatus(db);
 		setArticlesStatus(art);
+		if (provs && provs.providers) setProvidersData(provs.providers);
 		setIsLoadingTelemetry(false);
 	};
+
+	// Real-time intent detection — derived from the query the user is currently typing
+	const detectedProviders = useMemo(() => {
+		const q = query.toLowerCase();
+		return Object.entries(PROVIDER_KEYWORDS)
+			.filter(([, kws]) => kws.some((kw) => q.includes(kw)))
+			.map(([name]) => name);
+	}, [query]);
+
 
 	// Initialization
 	useEffect(() => {
@@ -115,8 +144,13 @@ export default function FinSightDashboard() {
 
 		setIsQuerying(true);
 
-		// Call API
-		const result = await finSightApiService.queryRAG(userQuery);
+		// Format history for backend (only user and assistant, omit system)
+		const formattedHistory = chatHistory
+			.filter(msg => msg.role === 'user' || msg.role === 'assistant')
+			.map(msg => ({ role: msg.role, content: msg.content }));
+
+		// Call API — backend auto-detects live providers from the query text
+		const result = await finSightApiService.queryRAG(userQuery, ["scraping"], formattedHistory);
 
 		// Add Assistant Message
 		if (result) {
@@ -240,6 +274,60 @@ export default function FinSightDashboard() {
 				</div>
 			</div>
 
+			{/* Live APIs — compact status row (Full Width Top) */}
+			<div className="max-w-7xl mx-auto mb-8 glass rounded-xl p-5 border border-white/5">
+				<div className="flex items-center justify-between mb-3">
+					<div className="flex items-center gap-2">
+						<span className="material-symbols-outlined text-blue-400 text-xl">api</span>
+						<h3 className="font-headline font-bold text-sm">Live Data Providers</h3>
+					</div>
+					<span className="text-[9px] font-mono bg-blue-400/10 text-blue-400 border border-blue-400/20 px-2 py-0.5 rounded-full uppercase tracking-widest">Auto-detect</span>
+				</div>
+				<p className="text-xs text-on-surface-variant font-body mb-4 leading-relaxed">
+					Mentionnez un provider dans votre message pour l'interroger automatiquement.
+					Ex : <span className="font-mono text-[10px] bg-white/5 px-1.5 py-0.5 rounded border border-white/10">"...selon Finnhub"</span> ou <span className="font-mono text-[10px] bg-white/5 px-1.5 py-0.5 rounded border border-white/10">"...via NewsAPI"</span>.
+				</p>
+
+				{isLoadingTelemetry ? (
+					<div className="animate-pulse h-10 bg-white/5 rounded w-full" />
+				) : (
+					<div className="flex flex-wrap gap-2">
+						{/* Scraping — always available */}
+						<div className="flex items-center gap-2 bg-surface-container border border-green-400/20 rounded-lg px-3 py-2">
+							<span className="material-symbols-outlined text-green-400 text-[13px]">database</span>
+							<span className="text-[10px] font-bold text-green-400 uppercase tracking-wide">Scraping</span>
+							<div className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
+							<span className="text-[9px] text-green-400/60 font-mono">Default</span>
+						</div>
+
+						{/* External providers */}
+						{providersData.map((p) => {
+							const meta = PROVIDER_META[p.name] || PROVIDER_META.scraping;
+							return (
+								<div
+									key={p.name}
+									title={p.configured ? `Écrivez "${meta.label}" dans le chat` : "Clé API non configurée"}
+									className={`flex items-center gap-2 bg-surface-container rounded-lg px-3 py-2 border transition-colors ${
+										p.configured ? `${meta.border}` : "border-white/5 opacity-40"
+									}`}
+								>
+									<span className={`material-symbols-outlined text-[13px] ${p.configured ? meta.color : "text-on-surface-variant"}`}>{meta.icon}</span>
+									<span className={`text-[10px] font-bold uppercase tracking-wide ${p.configured ? meta.color : "text-on-surface-variant"}`}>{meta.label}</span>
+									{p.configured ? (
+										<span className="text-[9px] font-mono flex items-center gap-1">
+											<span className="material-symbols-outlined text-[9px]">chat</span>
+											<span className={`font-mono ${meta.color} opacity-70`}>"{meta.label}"</span>
+										</span>
+									) : (
+										<span className="text-[9px] font-mono text-red-400/60">No key</span>
+									)}
+								</div>
+							);
+						})}
+					</div>
+				)}
+			</div>
+
 			{/* DASHBOARD GRID */}
 			<div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8">
 				{/* LEFT PANE: RAG Terminal & Telemetry */}
@@ -315,6 +403,26 @@ export default function FinSightDashboard() {
 													</h4>
 													<div className="flex flex-col gap-1.5">
 														{msg.sources.map((url, idx) => {
+															if (url.startsWith("live:")) {
+																const providerName = url.replace("live:", "");
+																return (
+																	<div
+																		key={idx}
+																		className="text-xs font-mono text-blue-400 flex items-center justify-between bg-blue-400/10 px-2 py-1.5 rounded border border-blue-400/20"
+																	>
+																		<span className="flex items-center gap-1.5">
+																			<span className="material-symbols-outlined text-[12px]">
+																				rss_feed
+																			</span>
+																			Source Directe:{" "}
+																			{providerName.toUpperCase()}
+																		</span>
+																		<span className="text-[9px] bg-blue-400/20 px-1.5 py-0.5 rounded text-blue-400 uppercase font-bold tracking-wider">
+																			Live API
+																		</span>
+																	</div>
+																);
+															}
 															let domain = "Link";
 															try {
 																domain = new URL(url).hostname.replace(
@@ -328,12 +436,12 @@ export default function FinSightDashboard() {
 																	href={url}
 																	target="_blank"
 																	rel="noopener noreferrer"
-																	className="text-xs font-mono text-green-400 hover:underline flex items-center justify-between group bg-background/50 px-2 py-1.5 rounded"
+																	className="text-xs font-mono text-green-400 hover:underline flex items-center justify-between group bg-background/50 px-2 py-1.5 rounded border border-transparent hover:border-green-400/20"
 																>
 																	<span className="truncate max-w-[200px]">
 																		{url}
 																	</span>
-																	<span className="text-[9px] bg-green-400/20 px-1.5 py-0.5 rounded text-green-400 opacity-0 group-hover:opacity-100 transition-opacity">
+																	<span className="text-[9px] bg-green-400/20 px-1.5 py-0.5 rounded text-green-400 opacity-0 group-hover:opacity-100 transition-opacity uppercase tracking-wider font-bold">
 																		Visiter ↗
 																	</span>
 																</a>
@@ -401,11 +509,41 @@ export default function FinSightDashboard() {
 											: cooldown > 0
 												? `${cooldown}s`
 												: "Send"}
-										<span className="material-symbols-outlined text-sm">
+								<span className="material-symbols-outlined text-sm">
 											send
 										</span>
 									</button>
 								</div>
+								{/* Active sources indicator */}
+								<div className="mt-2 flex items-center gap-2 flex-wrap">
+									<span className="text-[9px] uppercase tracking-widest text-on-surface-variant font-bold">
+										Sources :
+									</span>
+									<span className="flex items-center gap-1 text-[9px] font-mono px-2 py-0.5 rounded-full bg-green-400/10 text-green-400 border border-green-400/20">
+										<span className="material-symbols-outlined text-[10px]">
+											database
+										</span>
+										Local DB
+									</span>
+									{detectedProviders.map((name) => {
+										const meta = PROVIDER_META[name];
+										return (
+											<motion.span
+												key={name}
+												initial={{ opacity: 0, scale: 0.8 }}
+												animate={{ opacity: 1, scale: 1 }}
+												exit={{ opacity: 0, scale: 0.8 }}
+												className={`flex items-center gap-1 text-[9px] font-mono px-2 py-0.5 rounded-full ${meta.bg} ${meta.color} border ${meta.border}`}
+											>
+												<span className="material-symbols-outlined text-[10px]">
+													bolt
+												</span>
+												{meta.label} — Live
+											</motion.span>
+										);
+									})}
+								</div>
+
 								{/* Rate limit warning */}
 								<div className="mt-2 text-[10px] text-on-surface-variant font-mono text-center flex items-center justify-center gap-1">
 									<span className="material-symbols-outlined text-[12px] text-orange-400">
@@ -535,6 +673,7 @@ export default function FinSightDashboard() {
 								)}
 							</button>
 						</div>
+
 
 						{/* Action Feedback Message */}
 						{ingestionMessage && (
