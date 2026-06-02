@@ -7,6 +7,7 @@ import {
 export const metadata = {
 	title: "Timeline & Expériences",
 	description: "Découvrez mon parcours académique et professionnel : Double diplôme PSTB x Excelia, expériences en Data et stratégies digitales.",
+	alternates: { canonical: "/timeline" },
 };
 
 export default function Timeline() {
