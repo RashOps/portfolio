@@ -7,6 +7,7 @@ import {
 export const metadata = {
 	title: "Skill Tree",
 	description: "Arsenal technique : Python, Machine Learning, Data Engineering, DevOps et Business Intelligence.",
+	alternates: { canonical: "/skill-tree" },
 };
 
 export default function SkillTree() {

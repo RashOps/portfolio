@@ -1,6 +1,7 @@
 export const metadata = {
 	title: "Side Quests",
 	description: "Explorations personnelles, expérimentations technologiques et projets annexes en IA et développement Fullstack.",
+	alternates: { canonical: "/side-quests" },
 };
 
 export default function SideQuests() {

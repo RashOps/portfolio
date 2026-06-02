@@ -11,6 +11,10 @@ import {
 } from "@/components/ui/TrackedLink";
 import CVButton from "@/components/ui/CVButton";
 
+export const metadata = {
+	alternates: { canonical: "/" },
+};
+
 export default function Home() {
 	const jsonLd = {
 		"@context": "https://schema.org",
